@@ -14,5 +14,16 @@
             <a href="{{ url_for('check_status_page') }}" class="btn btn-secondary">Check Application Status</a>
         </div>
     </div>
+
+    <div class="card" style="margin-top: 30px;">
+        <h2 style="color: var(--primary-color); margin-bottom: 20px;">Staff Login</h2>
+        <p style="margin-bottom: 20px;">Access approval dashboards and management panels.</p>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+            <a href="{{ url_for('hr_login') }}" class="btn btn-secondary">HR Login</a>
+            <a href="{{ url_for('medical_login') }}" class="btn btn-secondary">Medical Login</a>
+            <a href="{{ url_for('safety_login') }}" class="btn btn-secondary">Safety Login</a>
+            <a href="{{ url_for('admin_login') }}" class="btn btn-secondary">Admin Login</a>
+        </div>
+    </div>
 </div>
 {% endblock %}
