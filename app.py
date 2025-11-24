@@ -898,7 +898,7 @@ def server_error(e):
 # ==================== APPLICATION STARTUP ====================
 
 # ==================== WSGI Entry Point ====================
-# For Vercel deployment
+# For Vercel deployment - expose the app for WSGI
 application = app
 
 if __name__ == '__main__':
