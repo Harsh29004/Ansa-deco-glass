@@ -13,10 +13,11 @@ if os.getenv('VERCEL'):
         save_contractor_signature, save_employee_photo, save_employee_signature,
         save_approval_signature, save_hod_signature, allowed_file
     )
+    from pdf_utils import generate_idcard_pdf
 else:
     from utils import (
         save_contractor_signature, save_employee_photo, save_employee_signature,
-        save_approval_signature, allowed_file, optimize_image
+        save_approval_signature, allowed_file, optimize_image, generate_idcard_pdf
     )
     # Add save_hod_signature for local development
     def save_hod_signature(file, department):
@@ -675,16 +676,16 @@ def safety_approve(employee_id):
             contractor_model = ContractorModel()
             contractor = contractor_model.find_by_id(str(employee['contractor_id']))
             
-            # PDF generation disabled for Vercel (read-only filesystem)
-            # TODO: Implement PDF generation with Supabase Storage
-            pdf_path = None
+            # Generate PDF and upload to Supabase Storage
+            pdf_url = generate_idcard_pdf(employee, contractor)
             
-            # Save ID card record (without PDF for now)
-            idcard_model = IDCardModel()
-            if pdf_path:
-                idcard_model.create(employee_id, pdf_path)
-            
-            flash('Employee approved by Safety Department. ID Card generated!', 'success')
+            # Save ID card record
+            if pdf_url:
+                idcard_model = IDCardModel()
+                idcard_model.create(employee_id, pdf_url)
+                flash('Employee approved by Safety Department. ID Card generated!', 'success')
+            else:
+                flash('Employee approved by Safety Department. ID Card generation failed.', 'warning')
         else:
             flash('Employee approved by Safety Department', 'success')
         
