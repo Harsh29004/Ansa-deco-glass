@@ -6,10 +6,23 @@ from flask import Flask, render_template, request, redirect, url_for, flash, sen
 from werkzeug.utils import secure_filename
 from config import Config
 from models import Database, ContractorModel, EmployeeModel, SignatureModel, IDCardModel, HODSignatureModel, init_database
-from utils import (
-    save_contractor_signature, save_employee_photo, save_employee_signature,
-    save_approval_signature, generate_idcard_pdf, allowed_file, optimize_image
-)
+
+# Use Supabase Storage for file uploads (Vercel-compatible)
+if os.getenv('VERCEL'):
+    from storage_utils import (
+        save_contractor_signature, save_employee_photo, save_employee_signature,
+        save_approval_signature, save_hod_signature, allowed_file
+    )
+else:
+    from utils import (
+        save_contractor_signature, save_employee_photo, save_employee_signature,
+        save_approval_signature, allowed_file, optimize_image
+    )
+    # Add save_hod_signature for local development
+    def save_hod_signature(file, department):
+        from utils import save_approval_signature
+        return save_approval_signature(file, 'hod', department)
+
 from email_utils import send_contractor_credentials_email, send_approval_notification
 import os
 from datetime import datetime
@@ -662,16 +675,14 @@ def safety_approve(employee_id):
             contractor_model = ContractorModel()
             contractor = contractor_model.find_by_id(str(employee['contractor_id']))
             
-            # Generate PDF
-            employee_name = f"{employee['first_name']}_{employee['surname']}"
-            pdf_filename = f"idcard_{secure_filename(employee_name)}_{str(employee['id'])}.pdf"
-            pdf_path = os.path.join(Config.IDCARDS_DIR, pdf_filename)
+            # PDF generation disabled for Vercel (read-only filesystem)
+            # TODO: Implement PDF generation with Supabase Storage
+            pdf_path = None
             
-            generate_idcard_pdf(employee, contractor, pdf_path)
-            
-            # Save ID card record
+            # Save ID card record (without PDF for now)
             idcard_model = IDCardModel()
-            idcard_model.create(employee_id, pdf_path)
+            if pdf_path:
+                idcard_model.create(employee_id, pdf_path)
             
             flash('Employee approved by Safety Department. ID Card generated!', 'success')
         else:
@@ -779,8 +790,12 @@ def upload_hod_signature():
             flash('Valid signature file is required', 'error')
             return redirect(url_for('admin_signatures'))
         
-        # Save signature
-        signature_path = save_approval_signature(signature_file, department.lower(), hod_name)
+        # Save signature to Supabase Storage
+        signature_path = save_hod_signature(signature_file, department)
+        
+        if not signature_path:
+            flash('Failed to upload signature to storage', 'error')
+            return redirect(url_for('admin_signatures'))
         
         # Update in database
         hod_signature_model = HODSignatureModel()
