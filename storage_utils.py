@@ -12,9 +12,13 @@ from PIL import Image
 
 
 def get_storage_client():
-    """Get Supabase storage client"""
-    db = Database()
-    return db.get_client().storage
+    """Get Supabase storage client with service role key"""
+    from supabase import create_client
+    # Use service key for storage operations (has full access)
+    supabase_url = Config.SUPABASE_URL
+    service_key = Config.SUPABASE_SERVICE_KEY if Config.SUPABASE_SERVICE_KEY else Config.SUPABASE_KEY
+    client = create_client(supabase_url, service_key)
+    return client.storage
 
 
 def allowed_file(filename):
@@ -47,11 +51,11 @@ def upload_to_supabase(file, bucket_name, folder, prefix=''):
         # Get storage client
         storage = get_storage_client()
         
-        # Upload to Supabase
-        storage.from_(bucket_name).upload(
-            file_path,
-            file_content,
-            file_options={"content-type": get_mime_type(filename)}
+        # Upload to Supabase with upsert to overwrite if exists
+        result = storage.from_(bucket_name).upload(
+            path=file_path,
+            file=file_content,
+            file_options={"content-type": get_mime_type(filename), "upsert": "true"}
         )
         
         # Get public URL
@@ -59,6 +63,11 @@ def upload_to_supabase(file, bucket_name, folder, prefix=''):
         
         return public_url
         
+    except Exception as e:
+        print(f"Error uploading to Supabase: {e}")
+        import traceback
+        traceback.print_exc()
+        return None
     except Exception as e:
         print(f"Error uploading to Supabase: {e}")
         return None
