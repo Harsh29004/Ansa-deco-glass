@@ -160,7 +160,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     // Show signature preview
                     const signatureImg = document.getElementById('signature_image');
-                    signatureImg.src = `/uploads/${data.signature_path}`;
+                    // Check if signature_path is a full URL or relative path
+                    if (data.signature_path.startsWith('http')) {
+                        signatureImg.src = data.signature_path;
+                    } else {
+                        signatureImg.src = `/uploads/${data.signature_path}`;
+                    }
                     document.getElementById('signature_preview').style.display = 'block';
                 } else {
                     alert('HOD signature not found for this department. Please contact admin to upload HOD signature.');
