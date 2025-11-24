@@ -20,6 +20,8 @@ class Database:
     def connect(self):
         """Establish Supabase connection"""
         if self._client is None:
+            if not Config.SUPABASE_URL or not Config.SUPABASE_KEY:
+                raise ValueError("SUPABASE_URL and SUPABASE_KEY must be set in environment variables")
             self._client = create_client(Config.SUPABASE_URL, Config.SUPABASE_KEY)
         return self._client
     

@@ -17,11 +17,20 @@ from functools import wraps
 
 app = Flask(__name__)
 app.config.from_object(Config)
-Config.init_app(app)
+
+# Only initialize directories if not in serverless environment
+try:
+    Config.init_app(app)
+except Exception as e:
+    print(f"Warning: Could not initialize app directories: {e}")
 
 # Initialize database connection
-db = Database()
-db.connect()
+try:
+    db = Database()
+    db.connect()
+except Exception as e:
+    print(f"Error: Database connection failed: {e}")
+    raise
 
 
 # ==================== AUTHENTICATION ====================
@@ -893,8 +902,11 @@ def server_error(e):
 application = app
 
 if __name__ == '__main__':
-    # Initialize database indexes
-    init_database()
+    # Initialize database indexes (only for local development)
+    try:
+        init_database()
+    except Exception as e:
+        print(f"Warning: Could not initialize database: {e}")
     
     # Run application
     app.run(debug=True, host='0.0.0.0', port=5000)

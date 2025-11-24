@@ -59,6 +59,10 @@ class Config:
     @staticmethod
     def init_app(app):
         """Initialize application directories"""
+        # Skip directory creation in serverless environment (Vercel)
+        if os.getenv('VERCEL'):
+            return
+            
         directories = [
             Config.UPLOAD_FOLDER,
             Config.CONTRACTOR_SIGNATURES_DIR,
@@ -68,4 +72,7 @@ class Config:
             Config.IDCARDS_DIR
         ]
         for directory in directories:
-            os.makedirs(directory, exist_ok=True)
+            try:
+                os.makedirs(directory, exist_ok=True)
+            except Exception as e:
+                print(f"Warning: Could not create directory {directory}: {e}")
