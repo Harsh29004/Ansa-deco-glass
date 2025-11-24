@@ -36,10 +36,12 @@ instance/
 # Uploads and generated files
 uploads/
 !uploads/.gitkeep
-*.pdf
-*.jpg
-*.jpeg
-*.png
+
+# Uploaded images and PDFs (not static assets)
+uploads/**/*.pdf
+uploads/**/*.jpg
+uploads/**/*.jpeg
+uploads/**/*.png
 
 # Logs
 logs/
