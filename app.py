@@ -2,6 +2,10 @@
 Main Flask Application
 Approval Workflow System for Manufacturing Company
 """
+import os
+from datetime import datetime
+from functools import wraps
+
 from flask import Flask, render_template, request, redirect, url_for, flash, send_file, send_from_directory, jsonify, session
 from werkzeug.utils import secure_filename
 from config import Config
@@ -25,9 +29,6 @@ else:
         return save_approval_signature(file, 'hod', department)
 
 from email_utils import send_contractor_credentials_email, send_approval_notification
-import os
-from datetime import datetime
-from functools import wraps
 
 app = Flask(__name__)
 app.config.from_object(Config)
