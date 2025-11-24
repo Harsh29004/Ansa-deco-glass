@@ -13,7 +13,6 @@ from utils import (
 from email_utils import send_contractor_credentials_email, send_approval_notification
 import os
 from datetime import datetime
-from bson import ObjectId
 from functools import wraps
 
 app = Flask(__name__)
@@ -888,6 +887,10 @@ def server_error(e):
 
 
 # ==================== APPLICATION STARTUP ====================
+
+# ==================== WSGI Entry Point ====================
+# For Vercel deployment
+application = app
 
 if __name__ == '__main__':
     # Initialize database indexes
