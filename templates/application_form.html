@@ -1,0 +1,338 @@
+{% extends "base.html" %}
+
+{% block title %}Employee Application Form{% endblock %}
+
+{% block content %}
+<div class="main-content">
+    <h1 style="color: var(--primary-color); margin-bottom: 30px;">Employee Application Form</h1>
+    <p style="margin-bottom: 30px; color: var(--text-light);">Add details for all employees working under this contract</p>
+    
+    <form method="POST" enctype="multipart/form-data" id="employeeApplicationForm">
+        <input type="hidden" name="employee_count" id="employee_count" value="1">
+        
+        <div id="employeesContainer">
+            <!-- Employee forms will be added here dynamically -->
+        </div>
+        
+        <div class="btn-group" style="margin-top: 30px;">
+            <button type="button" class="btn btn-secondary" onclick="addEmployee()">+ Add Another Employee</button>
+            <button type="submit" class="btn btn-success">Submit All Employees</button>
+        </div>
+    </form>
+</div>
+
+<!-- Employee Form Template -->
+<template id="employeeFormTemplate">
+    <div class="employee-form" data-employee-index="0">
+        <div class="employee-form-header">
+            <h2 style="color: var(--primary-color);">Employee <span class="employee-number">1</span></h2>
+            <button type="button" class="remove-employee" onclick="removeEmployee(this)" style="display: none;">Remove Employee</button>
+        </div>
+        
+        <div class="form-section">
+            <h3>Personal Information</h3>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="required">First Name</label>
+                    <input type="text" class="form-control" name="emp_0_first_name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Middle Name</label>
+                    <input type="text" class="form-control" name="emp_0_middle_name">
+                </div>
+                
+                <div class="form-group">
+                    <label class="required">Surname</label>
+                    <input type="text" class="form-control" name="emp_0_surname" required>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="required">Date of Birth</label>
+                    <input type="date" class="form-control" name="emp_0_dob" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Qualification</label>
+                    <input type="text" class="form-control" name="emp_0_qualification">
+                </div>
+                
+                <div class="form-group">
+                    <label>Aadhar Number</label>
+                    <input type="text" class="form-control" name="emp_0_aadhar" pattern="[0-9]{12}" maxlength="12">
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-section">
+            <h3>Permanent Address</h3>
+            
+            <div class="form-group">
+                <label>Street Address</label>
+                <input type="text" class="form-control" name="emp_0_perm_street">
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>City</label>
+                    <input type="text" class="form-control" name="emp_0_perm_city">
+                </div>
+                
+                <div class="form-group">
+                    <label>State</label>
+                    <input type="text" class="form-control" name="emp_0_perm_state">
+                </div>
+                
+                <div class="form-group">
+                    <label>Pincode</label>
+                    <input type="text" class="form-control" name="emp_0_perm_pincode" pattern="[0-9]{6}" maxlength="6">
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-section">
+            <h3>Present Address</h3>
+            <div style="margin-bottom: 15px;">
+                <label style="display: flex; align-items: center; cursor: pointer;">
+                    <input type="checkbox" onchange="copyPermanentAddress(this)" style="margin-right: 10px;">
+                    Same as Permanent Address
+                </label>
+            </div>
+            
+            <div class="form-group">
+                <label>Street Address</label>
+                <input type="text" class="form-control" name="emp_0_pres_street">
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>City</label>
+                    <input type="text" class="form-control" name="emp_0_pres_city">
+                </div>
+                
+                <div class="form-group">
+                    <label>State</label>
+                    <input type="text" class="form-control" name="emp_0_pres_state">
+                </div>
+                
+                <div class="form-group">
+                    <label>Pincode</label>
+                    <input type="text" class="form-control" name="emp_0_pres_pincode" pattern="[0-9]{6}" maxlength="6">
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-section">
+            <h3>Bank Details</h3>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Bank Name</label>
+                    <input type="text" class="form-control" name="emp_0_bank_name">
+                </div>
+                
+                <div class="form-group">
+                    <label>Account Number</label>
+                    <input type="text" class="form-control" name="emp_0_bank_account">
+                </div>
+                
+                <div class="form-group">
+                    <label>IFSC Code</label>
+                    <input type="text" class="form-control" name="emp_0_bank_ifsc">
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-section">
+            <h3>Emergency Contact</h3>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Contact Name</label>
+                    <input type="text" class="form-control" name="emp_0_emergency_name">
+                </div>
+                
+                <div class="form-group">
+                    <label>Contact Phone</label>
+                    <input type="tel" class="form-control" name="emp_0_emergency_phone" pattern="[0-9]{10}">
+                </div>
+                
+                <div class="form-group">
+                    <label>Relation</label>
+                    <input type="text" class="form-control" name="emp_0_emergency_relation">
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-section">
+            <h3>Past Employment</h3>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Previous Company</label>
+                    <input type="text" class="form-control" name="emp_0_past_employer_company">
+                </div>
+                
+                <div class="form-group">
+                    <label>Duration</label>
+                    <input type="text" class="form-control" name="emp_0_past_employer_duration" placeholder="e.g., 2 years">
+                </div>
+                
+                <div class="form-group">
+                    <label>Position</label>
+                    <input type="text" class="form-control" name="emp_0_past_employer_position">
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-section">
+            <h3>Reference</h3>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Reference Name</label>
+                    <input type="text" class="form-control" name="emp_0_reference_name">
+                </div>
+                
+                <div class="form-group">
+                    <label>Reference Phone</label>
+                    <input type="tel" class="form-control" name="emp_0_reference_phone" pattern="[0-9]{10}">
+                </div>
+                
+                <div class="form-group">
+                    <label>Relation</label>
+                    <input type="text" class="form-control" name="emp_0_reference_relation">
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-section">
+            <h3>Documents & Photos</h3>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="required">Employee Photo</label>
+                    <input type="file" class="form-control" name="emp_0_photo" accept="image/*" required>
+                    <small style="color: var(--text-light);">Passport size photo (Max 16MB)</small>
+                </div>
+                
+                <div class="form-group">
+                    <label class="required">Employee Signature</label>
+                    <input type="file" class="form-control" name="emp_0_signature" accept="image/*" required>
+                    <small style="color: var(--text-light);">Signature image (Max 16MB)</small>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Remarks</label>
+                <textarea class="form-control" name="emp_0_remarks" rows="3"></textarea>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+let employeeCount = 0;
+
+// Initialize first employee form on page load
+document.addEventListener('DOMContentLoaded', function() {
+    addEmployee();
+});
+
+function addEmployee() {
+    const container = document.getElementById('employeesContainer');
+    const template = document.getElementById('employeeFormTemplate');
+    const clone = template.content.cloneNode(true);
+    
+    // Update employee index and number
+    const employeeForm = clone.querySelector('.employee-form');
+    employeeForm.setAttribute('data-employee-index', employeeCount);
+    
+    const employeeNumber = clone.querySelector('.employee-number');
+    employeeNumber.textContent = employeeCount + 1;
+    
+    // Update all input names with correct index
+    const inputs = clone.querySelectorAll('input, textarea, select');
+    inputs.forEach(input => {
+        if (input.name) {
+            input.name = input.name.replace('emp_0_', `emp_${employeeCount}_`);
+        }
+    });
+    
+    // Show remove button if not first employee
+    if (employeeCount > 0) {
+        const removeBtn = clone.querySelector('.remove-employee');
+        removeBtn.style.display = 'block';
+    }
+    
+    container.appendChild(clone);
+    employeeCount++;
+    document.getElementById('employee_count').value = employeeCount;
+}
+
+function removeEmployee(button) {
+    if (employeeCount <= 1) {
+        alert('At least one employee is required');
+        return;
+    }
+    
+    const employeeForm = button.closest('.employee-form');
+    employeeForm.remove();
+    employeeCount--;
+    document.getElementById('employee_count').value = employeeCount;
+    
+    // Update employee numbers
+    updateEmployeeNumbers();
+}
+
+function updateEmployeeNumbers() {
+    const forms = document.querySelectorAll('.employee-form');
+    forms.forEach((form, index) => {
+        const number = form.querySelector('.employee-number');
+        number.textContent = index + 1;
+        form.setAttribute('data-employee-index', index);
+        
+        // Update input names
+        const inputs = form.querySelectorAll('input, textarea, select');
+        inputs.forEach(input => {
+            if (input.name && input.name.startsWith('emp_')) {
+                const nameParts = input.name.split('_');
+                nameParts[1] = index;
+                input.name = nameParts.join('_');
+            }
+        });
+    });
+}
+
+function copyPermanentAddress(checkbox) {
+    const employeeForm = checkbox.closest('.employee-form');
+    const index = employeeForm.getAttribute('data-employee-index');
+    
+    if (checkbox.checked) {
+        // Copy permanent address to present address
+        const permStreet = employeeForm.querySelector(`input[name="emp_${index}_perm_street"]`).value;
+        const permCity = employeeForm.querySelector(`input[name="emp_${index}_perm_city"]`).value;
+        const permState = employeeForm.querySelector(`input[name="emp_${index}_perm_state"]`).value;
+        const permPincode = employeeForm.querySelector(`input[name="emp_${index}_perm_pincode"]`).value;
+        
+        employeeForm.querySelector(`input[name="emp_${index}_pres_street"]`).value = permStreet;
+        employeeForm.querySelector(`input[name="emp_${index}_pres_city"]`).value = permCity;
+        employeeForm.querySelector(`input[name="emp_${index}_pres_state"]`).value = permState;
+        employeeForm.querySelector(`input[name="emp_${index}_pres_pincode"]`).value = permPincode;
+    }
+}
+
+// Form validation before submit
+document.getElementById('employeeApplicationForm').addEventListener('submit', function(e) {
+    const count = document.getElementById('employee_count').value;
+    if (count < 1) {
+        e.preventDefault();
+        alert('Please add at least one employee');
+        return false;
+    }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Approval Workflow System{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div style="display: flex; align-items: center; gap: 20px;">
+                <img src="{{ url_for('static', filename='images/COMPANY_LOGO.png') }}" alt="ANSA Logo" style="height: 80px; width: auto;">
+                <div>
+                    <h1>ANSA Deco Glass</h1>
+                    <p>Contractor Approval Workflow System</p>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <nav class="nav">
+        <div class="container">
+            <ul class="nav-links">
+                <li><a href="{{ url_for('index') }}">Home</a></li>
+                <li><a href="{{ url_for('contractor_form') }}">New Application</a></li>
+                <li><a href="{{ url_for('check_status_page') }}">Check Status</a></li>
+                
+                {% if session.get('hr_logged_in') %}
+                    <li><a href="{{ url_for('hr_dashboard') }}">HR Dashboard</a></li>
+                {% endif %}
+                
+                {% if session.get('medical_logged_in') %}
+                    <li><a href="{{ url_for('medical_dashboard') }}">Medical Dashboard</a></li>
+                {% endif %}
+                
+                {% if session.get('safety_logged_in') %}
+                    <li><a href="{{ url_for('safety_dashboard') }}">Safety Dashboard</a></li>
+                {% endif %}
+                
+                {% if session.get('admin_logged_in') %}
+                    <li><a href="{{ url_for('admin_signatures') }}">Admin</a></li>
+                {% endif %}
+                
+                {% if session.get('user_role') %}
+                    <li class="user-info">
+                        <span class="badge">{{ session.get('user_role') }}</span>
+                        <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+    
+    <main class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        {% block content %}{% endblock %}
+    </main>
+    
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 ANSA Deco Glass. All rights reserved.</p>
+        </div>
+    </footer>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

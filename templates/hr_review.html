@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+{% block title %}HR Review - {{ employee.first_name }} {{ employee.surname }}{% endblock %}
+
+{% block content %}
+<div class="main-content">
+    <h1 style="color: var(--primary-color); margin-bottom: 30px;">HR Review: {{ employee.first_name }} {{ employee.middle_name }} {{ employee.surname }}</h1>
+    
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Contractor Information</h3>
+        </div>
+        <div class="form-row">
+            <div><strong>Contractor:</strong> {{ contractor.contractor_name }}</div>
+            <div><strong>PO Number:</strong> {{ contractor.po_number }}</div>
+            <div><strong>Department:</strong> {{ contractor.department }}</div>
+        </div>
+        <div style="margin-top: 15px;">
+            <strong>Job Description:</strong><br>
+            {{ contractor.job_description }}
+        </div>
+        <div style="margin-top: 15px;">
+            <strong>Contractor Signature:</strong><br>
+            {% if contractor.signature_path %}
+                <img src="{{ url_for('serve_uploaded_file', filename=contractor.signature_path.replace('\\', '/')) }}" class="signature-preview" alt="Contractor Signature" style="max-width: 200px; border: 1px solid #ddd; padding: 5px;">
+            {% else %}
+                <span style="color: var(--text-light);">Not available</span>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Employee Personal Information</h3>
+        </div>
+        <div class="form-row">
+            <div><strong>Full Name:</strong> {{ employee.first_name }} {{ employee.middle_name }} {{ employee.surname }}</div>
+            <div><strong>Date of Birth:</strong> {{ employee.dob }}</div>
+            <div><strong>Qualification:</strong> {{ employee.qualification or 'N/A' }}</div>
+        </div>
+        <div class="form-row" style="margin-top: 15px;">
+            <div><strong>Aadhar:</strong> {{ employee.aadhar or 'N/A' }}</div>
+            <div><strong>Father Name:</strong> {{ employee.father_name or 'N/A' }}</div>
+            <div><strong>Submitted:</strong> {{ employee.submitted_at[:10] if employee.submitted_at else 'N/A' }}</div>
+        </div>
+    </div>
+    
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Address Details</h3>
+        </div>
+        <div style="margin-bottom: 20px;">
+            <strong>Permanent Address:</strong><br>
+            {{ employee.address_permanent or 'N/A' }}
+        </div>
+        <div>
+            <strong>Present Address:</strong><br>
+            {{ employee.address_present or 'N/A' }}
+        </div>
+    </div>
+    
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Contact Information</h3>
+        </div>
+        <div class="form-row">
+            <div><strong>Mobile:</strong> {{ employee.mobile or 'N/A' }}</div>
+            <div><strong>Emergency Contact:</strong> {{ employee.emergency_contact or 'N/A' }}</div>
+            <div><strong>Emergency Mobile:</strong> {{ employee.emergency_mobile or 'N/A' }}</div>
+        </div>
+    </div>
+    
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Documents</h3>
+        </div>
+        <div class="form-row">
+            <div>
+                <strong>Employee Photo:</strong><br>
+                {% if employee.photo_path %}
+                    <img src="{{ url_for('serve_uploaded_file', filename=employee.photo_path.replace('\\', '/')) }}" class="image-preview" alt="Employee Photo" style="max-width: 200px; max-height: 250px; border: 1px solid #ddd; padding: 5px;">
+                {% else %}
+                    <span style="color: var(--text-light);">Not available</span>
+                {% endif %}
+            </div>
+            <div>
+                <strong>Employee Signature:</strong><br>
+                {% if employee.signature_path %}
+                    <img src="{{ url_for('serve_uploaded_file', filename=employee.signature_path.replace('\\', '/')) }}" class="signature-preview" alt="Employee Signature" style="max-width: 200px; border: 1px solid #ddd; padding: 5px;">
+                {% else %}
+                    <span style="color: var(--text-light);">Not available</span>
+                {% endif %}
+            </div>
+        </div>
+        {% if employee.remarks %}
+        <div style="margin-top: 15px;">
+            <strong>Remarks:</strong><br>
+            {{ employee.remarks }}
+        </div>
+        {% endif %}
+    </div>
+    
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">HR Decision</h3>
+        </div>
+        
+        <form method="POST" action="{{ url_for('hr_approve', employee_id=employee.id) }}" style="margin-bottom: 20px;">
+            <div class="form-group">
+                <label for="approved_by">Approved By (HR Officer Name)</label>
+                <input type="text" class="form-control" id="approved_by" name="approved_by" value="HR Department" required>
+            </div>
+            <button type="submit" class="btn btn-success">✓ Approve Employee</button>
+        </form>
+        
+        <form method="POST" action="{{ url_for('hr_reject', employee_id=employee.id) }}">
+            <div class="form-group">
+                <label for="approved_by_reject">Rejected By (HR Officer Name)</label>
+                <input type="text" class="form-control" id="approved_by_reject" name="approved_by" value="HR Department" required>
+            </div>
+            <div class="form-group">
+                <label for="reason">Rejection Reason</label>
+                <textarea class="form-control" id="reason" name="reason" rows="3" required>Documents incomplete or invalid</textarea>
+            </div>
+            <button type="submit" class="btn btn-danger">✗ Reject Employee</button>
+        </form>
+    </div>
+    
+    <div class="btn-group">
+        <a href="{{ url_for('hr_dashboard') }}" class="btn btn-secondary">Back to Dashboard</a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+
+{% block title %}Contractor's Legal Requirement Verification{% endblock %}
+
+{% block content %}
+<div class="main-content">
+    <div style="text-align: right; color: var(--text-light); font-size: 0.9rem; margin-bottom: 10px;">(OR-1829)</div>
+    <h1 style="color: var(--primary-color); margin-bottom: 10px; text-align: center;">Contractor's Legal Requirement Verification</h1>
+    <p style="text-align: center; font-style: italic; color: var(--text-muted); margin-bottom: 30px;">(To be filled by Concerned Department)</p>
+    
+    <form method="POST" enctype="multipart/form-data">
+        <div class="form-section">
+            <div class="form-group">
+                <label for="contractor_name" class="required">
+                    We are sending hear with M/s
+                </label>
+                <input type="text" class="form-control" id="contractor_name" name="contractor_name" 
+                       placeholder="Enter contractor company name" 
+                       style="display: inline-block; width: calc(100% - 250px); margin-left: 10px;" required>
+                <span style="margin-left: 10px;">for verification of their legal requirement.</span>
+            </div>
+            
+            <div class="form-group" style="margin-top: 30px;">
+                <label for="job_description" class="required">
+                    They are supposed to carry out
+                </label>
+                <input type="text" class="form-control" id="job_description" name="job_description" 
+                       placeholder="Enter job description" 
+                       style="display: inline-block; width: calc(100% - 200px); margin: 0 10px;" required>
+                <span>job under</span>
+            </div>
+            
+            <div class="form-group" style="margin-top: 10px;">
+                <select class="form-control" id="department" name="department" 
+                        style="display: inline-block; width: 300px; margin-right: 10px;" required>
+                    <option value="">Select Department</option>
+                    <option value="Production">Production</option>
+                    <option value="Printing">Printing</option>
+                    <option value="Quality Control">Quality Control</option>
+                    <option value="Packaging">Packaging</option>
+                    <option value="Maintenance">Maintenance</option>
+                    <option value="Logistics">Logistics</option>
+                    <option value="Other">Other</option>
+                </select>
+                <strong>Department.</strong>
+            </div>
+            
+            <div class="form-group" style="margin-top: 30px;">
+                <label for="po_number" class="required" style="display: block; margin-bottom: 10px;">
+                    <strong>Purchase Order Number (PO):-</strong>
+                </label>
+                <input type="text" class="form-control" id="po_number" name="po_number" 
+                       placeholder="Enter PO number" required>
+            </div>
+            
+            <div class="form-row" style="margin-top: 25px;">
+                <div class="form-group">
+                    <label for="email" class="required">
+                        <strong>E mail address :-</strong>
+                        <span style="font-size: 0.85rem; color: var(--text-light); margin-left: 10px;">(For E-Work Permit System)</span>
+                    </label>
+                    <input type="email" class="form-control" id="email" name="email" 
+                           placeholder="contractor@example.com" required>
+                </div>
+            </div>
+            
+            <div class="form-row" style="margin-top: 20px;">
+                <div class="form-group">
+                    <label for="mobile" class="required">
+                        <strong>Mobile No:-</strong>
+                        <span style="font-size: 0.85rem; color: var(--text-light); margin-left: 10px;">(For E-Work Permit System)</span>
+                    </label>
+                    <input type="tel" class="form-control" id="mobile" name="mobile" 
+                           pattern="[0-9]{10}" placeholder="10-digit mobile number" required>
+                </div>
+            </div>
+            
+            <div class="form-row" style="margin-top: 30px; align-items: flex-start;">
+                <div class="form-group" style="flex: 1;">
+                    <label for="hod_name" class="required">
+                        <strong>Name of HOD:-</strong>
+                    </label>
+                    <input type="text" class="form-control" id="hod_name" name="hod_name" 
+                           placeholder="Head of Department name" required readonly 
+                           style="background-color: #f5f5f5;">
+                    <small style="color: var(--text-light); display: block; margin-top: 5px;">
+                        Auto-filled based on department selection
+                    </small>
+                </div>
+                
+                <div class="form-group" style="flex: 1;">
+                    <label for="signature" class="required">
+                        <strong>Signature of HOD:-</strong>
+                    </label>
+                    <div id="signature_preview" style="margin-bottom: 10px; display: none;">
+                        <img id="signature_image" src="" alt="HOD Signature" 
+                             style="max-width: 200px; max-height: 80px; border: 1px solid #ddd; padding: 5px;">
+                    </div>
+                    <input type="hidden" id="signature_path" name="signature_path">
+                    <small style="color: var(--text-light); display: block; margin-top: 5px;">
+                        Signature auto-loaded from database
+                    </small>
+                </div>
+            </div>
+            
+            <div class="form-group" style="margin-top: 25px;">
+                <label for="submission_date">
+                    <strong>Date & Time:-</strong>
+                </label>
+                <input type="datetime-local" class="form-control" id="submission_date" name="submission_date" 
+                       style="max-width: 300px;" readonly>
+            </div>
+        </div>
+        
+        <div class="btn-group" style="margin-top: 30px;">
+            <button type="submit" class="btn btn-primary" style="padding: 12px 40px; font-size: 1.1rem;">
+                Submit & Proceed to Employee Application Forms
+            </button>
+            <a href="{{ url_for('index') }}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+
+<script>
+// Set current date and time
+document.addEventListener('DOMContentLoaded', function() {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    
+    const dateTimeValue = `${year}-${month}-${day}T${hours}:${minutes}`;
+    document.getElementById('submission_date').value = dateTimeValue;
+    
+    // Load HOD signature when department changes
+    const departmentSelect = document.getElementById('department');
+    departmentSelect.addEventListener('change', function() {
+        const department = this.value;
+        
+        if (!department) {
+            // Clear fields if no department selected
+            document.getElementById('hod_name').value = '';
+            document.getElementById('signature_path').value = '';
+            document.getElementById('signature_preview').style.display = 'none';
+            return;
+        }
+        
+        // Fetch HOD signature from API
+        fetch(`/api/hod-signature/${encodeURIComponent(department)}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Set HOD name
+                    document.getElementById('hod_name').value = data.hod_name;
+                    
+                    // Set signature path (hidden field for form submission)
+                    document.getElementById('signature_path').value = data.signature_path;
+                    
+                    // Show signature preview
+                    const signatureImg = document.getElementById('signature_image');
+                    signatureImg.src = `/uploads/${data.signature_path}`;
+                    document.getElementById('signature_preview').style.display = 'block';
+                } else {
+                    alert('HOD signature not found for this department. Please contact admin to upload HOD signature.');
+                    document.getElementById('hod_name').value = '';
+                    document.getElementById('signature_path').value = '';
+                    document.getElementById('signature_preview').style.display = 'none';
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching HOD signature:', error);
+                alert('Error loading HOD signature. Please try again.');
+            });
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}Safety Dashboard{% endblock %}
+
+{% block content %}
+<div class="main-content">
+    <h1 style="color: var(--primary-color); margin-bottom: 30px;">Safety Department Dashboard</h1>
+    <p style="margin-bottom: 30px;">Verify PPE and safety requirements for medically fit employees</p>
+    
+    {% if employees %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Employee Name</th>
+                    <th>Contractor</th>
+                    <th>Department</th>
+                    <th>HR Status</th>
+                    <th>Medical Status</th>
+                    <th>Safety Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for emp in employees %}
+                <tr>
+                    <td>{{ emp.first_name }} {{ emp.middle_name }} {{ emp.surname }}</td>
+                    <td>{{ emp.contractor_info.contractor_name }}</td>
+                    <td>{{ emp.contractor_info.department }}</td>
+                    <td>
+                        <span class="badge badge-approved">Approved</span><br>
+                        <small>{{ emp.approval_flow.hr.at.strftime('%d-%m-%Y') if emp.approval_flow.hr.at else '' }}</small>
+                    </td>
+                    <td>
+                        <span class="badge badge-approved">Approved</span><br>
+                        <small>{{ emp.approval_flow.medical.at.strftime('%d-%m-%Y') if emp.approval_flow.medical.at else '' }}</small>
+                    </td>
+                    <td>
+                        <span class="badge badge-pending">Pending Safety Check</span>
+                    </td>
+                    <td>
+                        <a href="{{ url_for('safety_review', employee_id=emp.id) }}" class="btn btn-primary" style="padding: 8px 15px; font-size: 0.875rem;">Review</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="card">
+            <p style="text-align: center; color: var(--text-light); margin: 20px 0;">No pending employees for safety review</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

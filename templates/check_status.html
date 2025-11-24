@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}Check Application Status - ANSA Approval System{% endblock %}
+
+{% block content %}
+<div class="main-content">
+    <h1 style="color: var(--primary-color); margin-bottom: 30px;">Check Application Status</h1>
+    
+    <div class="card">
+        <h2 style="color: var(--primary-color); margin-bottom: 20px;">Enter Your Details</h2>
+        <p style="margin-bottom: 20px;">Enter your Contractor ID and Access Token to view your application status.</p>
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        <form method="GET" action="{{ url_for('contractor_status') }}">
+            <div class="form-group">
+                <label for="contractor_id">Contractor ID *</label>
+                <input type="text" id="contractor_id" name="contractor_id" required 
+                       placeholder="Enter your Contractor ID">
+                <small>This was provided when you submitted your application</small>
+            </div>
+            
+            <div class="form-group">
+                <label for="token">Access Token *</label>
+                <input type="text" id="token" name="token" required 
+                       placeholder="Enter your access token">
+                <small>Check your email for the access token</small>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Check Status</button>
+            <a href="{{ url_for('index') }}" class="btn btn-secondary">Back to Home</a>
+        </form>
+    </div>
+    
+    <div class="card" style="margin-top: 30px;">
+        <h3 style="color: var(--primary-color); margin-bottom: 15px;">📌 Important Notes</h3>
+        <ul style="line-height: 2;">
+            <li>You will receive your Contractor ID and Access Token via email after submission</li>
+            <li>Keep your Access Token secure - it's required to view your application status</li>
+            <li>If you've lost your credentials, please contact the admin</li>
+            <li>Status updates are available in real-time</li>
+        </ul>
+    </div>
+</div>
+
+<style>
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+    margin-left: 10px;
+}
+
+.btn-secondary:hover {
+    background: #5a6268;
+}
+
+.form-group small {
+    display: block;
+    color: var(--text-light);
+    font-size: 0.9rem;
+    margin-top: 5px;
+}
+</style>
+{% endblock %}

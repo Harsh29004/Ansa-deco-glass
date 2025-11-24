@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Approval Workflow System{% endblock %}
+
+{% block content %}
+<div class="main-content">
+    <h1 style="color: var(--primary-color); margin-bottom: 30px;">Welcome to Contractor Management System</h1>
+    
+    <div class="card">
+        <h2 style="color: var(--primary-color); margin-bottom: 20px;">For Contractors</h2>
+        <p style="margin-bottom: 20px;">Submit your contractor information and employee applications for approval.</p>
+        <div style="display: flex; gap: 15px;">
+            <a href="{{ url_for('contractor_form') }}" class="btn btn-primary">Start New Application</a>
+            <a href="{{ url_for('check_status_page') }}" class="btn btn-secondary">Check Application Status</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

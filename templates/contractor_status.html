@@ -1,0 +1,178 @@
+{% extends "base.html" %}
+
+{% block title %}Application Status - {{ contractor.contractor_name }}{% endblock %}
+
+{% block content %}
+<div class="main-content">
+    <h1 style="color: var(--primary-color); margin-bottom: 30px;">Application Status Tracking</h1>
+    
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Contractor Information</h3>
+        </div>
+        <div class="form-row">
+            <div><strong>Contractor:</strong> {{ contractor.contractor_name }}</div>
+            <div><strong>PO Number:</strong> {{ contractor.po_number }}</div>
+            <div><strong>Department:</strong> {{ contractor.department }}</div>
+        </div>
+        <div style="margin-top: 15px;">
+            <div><strong>Email:</strong> {{ contractor.email }}</div>
+            <div><strong>Mobile:</strong> {{ contractor.mobile }}</div>
+        </div>
+        <div style="margin-top: 15px;">
+            <strong>Job Description:</strong><br>
+            {{ contractor.job_description }}
+        </div>
+        <div style="margin-top: 15px;">
+            <div><strong>Submitted:</strong> {{ contractor.submitted_at.strftime('%d-%m-%Y %H:%M') if contractor.submitted_at else 'N/A' }}</div>
+            <div><strong>Total Employees:</strong> {{ contractor.employee_details|length }}</div>
+        </div>
+    </div>
+    
+    <div style="background: #d1ecf1; border-left: 4px solid #17a2b8; padding: 15px; margin: 20px 0; border-radius: 4px;">
+        <strong>ℹ Bookmark this page:</strong> Use the link with your access token to track your application status anytime
+    </div>
+    
+    <h2 style="color: var(--primary-color); margin: 30px 0 20px 0;">Employee Status</h2>
+    
+    {% if contractor.employee_details %}
+        {% for employee in contractor.employee_details %}
+        <div class="card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <div>
+                    <h3 style="color: var(--primary-color); margin: 0;">
+                        {{ employee.first_name }} {{ employee.middle_name }} {{ employee.surname }}
+                    </h3>
+                    <p style="color: var(--text-light); margin: 5px 0 0 0;">
+                        DOB: {{ employee.dob }} | Applied: {{ employee.applied_at.strftime('%d-%m-%Y') if employee.applied_at else 'N/A' }}
+                    </p>
+                </div>
+                <div>
+                    {% if employee.final_status == 'approved' %}
+                        <span class="badge badge-approved" style="font-size: 1rem;">APPROVED</span>
+                    {% elif employee.final_status == 'rejected' %}
+                        <span class="badge badge-rejected" style="font-size: 1rem;">REJECTED</span>
+                    {% else %}
+                        <span class="badge badge-pending" style="font-size: 1rem;">IN PROGRESS</span>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="timeline">
+                <!-- HR Stage -->
+                <div class="timeline-item {% if employee.approval_flow.hr.status == 'approved' %}approved{% elif employee.approval_flow.hr.status == 'rejected' %}rejected{% endif %}">
+                    <div class="timeline-content">
+                        <strong>HR Department</strong>
+                        {% if employee.approval_flow.hr.status == 'approved' %}
+                            <span class="badge badge-approved">Approved</span>
+                        {% elif employee.approval_flow.hr.status == 'rejected' %}
+                            <span class="badge badge-rejected">Rejected</span>
+                        {% else %}
+                            <span class="badge badge-pending">Pending</span>
+                        {% endif %}
+                        <br>
+                        {% if employee.approval_flow.hr.by %}
+                            <small>By: {{ employee.approval_flow.hr.by }}</small><br>
+                        {% endif %}
+                        {% if employee.approval_flow.hr.at %}
+                            <small>Date: {{ employee.approval_flow.hr.at.strftime('%d-%m-%Y %H:%M') }}</small>
+                        {% endif %}
+                        {% if employee.approval_flow.hr.signature_path %}
+                            <div style="margin-top: 10px;">
+                                <img src="/{{ employee.approval_flow.hr.signature_path }}" class="signature-preview" alt="HR Signature">
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <!-- Medical Stage -->
+                <div class="timeline-item {% if employee.approval_flow.medical.status == 'approved' %}approved{% elif employee.approval_flow.medical.status == 'rejected' %}rejected{% endif %}">
+                    <div class="timeline-content">
+                        <strong>Medical Department</strong>
+                        {% if employee.approval_flow.medical.status == 'approved' %}
+                            <span class="badge badge-approved">Approved</span>
+                        {% elif employee.approval_flow.medical.status == 'rejected' %}
+                            <span class="badge badge-rejected">Rejected</span>
+                        {% else %}
+                            <span class="badge badge-pending">Pending</span>
+                        {% endif %}
+                        <br>
+                        {% if employee.approval_flow.medical.by %}
+                            <small>By: {{ employee.approval_flow.medical.by }}</small><br>
+                        {% endif %}
+                        {% if employee.approval_flow.medical.at %}
+                            <small>Date: {{ employee.approval_flow.medical.at.strftime('%d-%m-%Y %H:%M') }}</small>
+                        {% endif %}
+                        {% if employee.approval_flow.medical.signature_path %}
+                            <div style="margin-top: 10px;">
+                                <img src="/{{ employee.approval_flow.medical.signature_path }}" class="signature-preview" alt="Medical Signature">
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <!-- Safety Stage -->
+                <div class="timeline-item {% if employee.approval_flow.safety.status == 'approved' %}approved{% elif employee.approval_flow.safety.status == 'rejected' %}rejected{% endif %}">
+                    <div class="timeline-content">
+                        <strong>Safety Department</strong>
+                        {% if employee.approval_flow.safety.status == 'approved' %}
+                            <span class="badge badge-approved">Approved</span>
+                        {% elif employee.approval_flow.safety.status == 'rejected' %}
+                            <span class="badge badge-rejected">Rejected</span>
+                        {% else %}
+                            <span class="badge badge-pending">Pending</span>
+                        {% endif %}
+                        <br>
+                        {% if employee.approval_flow.safety.by %}
+                            <small>By: {{ employee.approval_flow.safety.by }}</small><br>
+                        {% endif %}
+                        {% if employee.approval_flow.safety.at %}
+                            <small>Date: {{ employee.approval_flow.safety.at.strftime('%d-%m-%Y %H:%M') }}</small>
+                        {% endif %}
+                        {% if employee.approval_flow.safety.signature_path %}
+                            <div style="margin-top: 10px;">
+                                <img src="/{{ employee.approval_flow.safety.signature_path }}" class="signature-preview" alt="Safety Signature">
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <!-- Final Status -->
+                {% if employee.final_status == 'approved' %}
+                <div class="timeline-item approved">
+                    <div class="timeline-content">
+                        <strong>✓ Fully Approved - ID Card Ready</strong><br>
+                        <a href="{{ url_for('download_idcard', employee_id=employee.id) }}" class="btn btn-success" style="margin-top: 10px; padding: 8px 20px; font-size: 0.875rem;">
+                            📥 Download ID Card
+                        </a>
+                    </div>
+                </div>
+                {% elif employee.final_status == 'rejected' %}
+                <div class="timeline-item rejected">
+                    <div class="timeline-content">
+                        <strong>✗ Application Rejected</strong><br>
+                        {% if employee.reject_reason %}
+                            <div style="background: #f8d7da; padding: 10px; border-radius: 4px; margin-top: 10px;">
+                                <strong>Reason:</strong> {{ employee.reject_reason }}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="card">
+            <p style="text-align: center; color: var(--text-light);">No employees found</p>
+        </div>
+    {% endif %}
+</div>
+
+<script>
+// Auto-refresh page every 30 seconds to check for status updates
+setTimeout(function() {
+    location.reload();
+}, 30000);
+</script>
+{% endblock %}

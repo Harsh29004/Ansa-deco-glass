@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+
+{% block title %}Safety Review - {{ employee.first_name }} {{ employee.surname }}{% endblock %}
+
+{% block content %}
+<div class="main-content">
+    <h1 style="color: var(--primary-color); margin-bottom: 30px;">Safety Review: {{ employee.first_name }} {{ employee.middle_name }} {{ employee.surname }}</h1>
+    
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Employee Information</h3>
+        </div>
+        <div class="form-row">
+            <div>
+                <strong>Employee Photo:</strong><br>
+                {% if employee.photo_path %}
+                    <img src="/{{ employee.photo_path }}" class="image-preview" alt="Employee Photo">
+                {% else %}
+                    <span style="color: var(--text-light);">Not available</span>
+                {% endif %}
+            </div>
+            <div style="flex-grow: 1;">
+                <div><strong>Full Name:</strong> {{ employee.first_name }} {{ employee.middle_name }} {{ employee.surname }}</div>
+                <div style="margin-top: 10px;"><strong>Date of Birth:</strong> {{ employee.dob }}</div>
+                <div style="margin-top: 10px;"><strong>Qualification:</strong> {{ employee.qualification or 'N/A' }}</div>
+                <div style="margin-top: 10px;"><strong>Contractor:</strong> {{ contractor.contractor_name }}</div>
+                <div style="margin-top: 10px;"><strong>Department:</strong> {{ contractor.department }}</div>
+                <div style="margin-top: 10px;"><strong>Job:</strong> {{ contractor.job_description }}</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Approval Timeline</h3>
+        </div>
+        <div class="timeline">
+            <div class="timeline-item approved">
+                <div class="timeline-content">
+                    <strong>HR Department</strong> - Approved<br>
+                    <small>By: {{ employee.approval_flow.hr.by }}</small><br>
+                    <small>Date: {{ employee.approval_flow.hr.at.strftime('%d-%m-%Y %H:%M') if employee.approval_flow.hr.at else 'N/A' }}</small>
+                    {% if employee.approval_flow.hr.signature_path %}
+                    <div style="margin-top: 10px;">
+                        <img src="/{{ employee.approval_flow.hr.signature_path }}" class="signature-preview" alt="HR Signature">
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="timeline-item approved">
+                <div class="timeline-content">
+                    <strong>Medical Department</strong> - Approved<br>
+                    <small>By: {{ employee.approval_flow.medical.by }}</small><br>
+                    <small>Date: {{ employee.approval_flow.medical.at.strftime('%d-%m-%Y %H:%M') if employee.approval_flow.medical.at else 'N/A' }}</small>
+                    {% if employee.approval_flow.medical.signature_path %}
+                    <div style="margin-top: 10px;">
+                        <img src="/{{ employee.approval_flow.medical.signature_path }}" class="signature-preview" alt="Medical Signature">
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <strong>Safety Department</strong> - Pending<br>
+                    <small>Awaiting PPE and safety verification</small>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Safety Department Decision</h3>
+        </div>
+        
+        <div style="background: #d1ecf1; border-left: 4px solid #17a2b8; padding: 15px; margin-bottom: 20px;">
+            <strong>ℹ Important:</strong> Safety signature is required. Upon approval, ID card will be automatically generated.
+        </div>
+        
+        <form method="POST" action="{{ url_for('safety_approve', employee_id=employee.id) }}" enctype="multipart/form-data" style="margin-bottom: 30px;">
+            <h4 style="color: var(--success-color); margin-bottom: 15px;">Approve Employee</h4>
+            <div class="form-group">
+                <label for="approved_by">Safety Officer Name</label>
+                <input type="text" class="form-control" id="approved_by" name="approved_by" value="Safety Officer" required>
+            </div>
+            <div class="form-group">
+                <label for="signature" class="required">Safety Officer Signature (Image)</label>
+                <input type="file" class="form-control" id="signature" name="signature" accept="image/*" required>
+                <small style="color: var(--text-light);">Upload signature image (Max 16MB)</small>
+            </div>
+            <button type="submit" class="btn btn-success">✓ Approve - PPE & Safety Verified</button>
+            <p style="margin-top: 10px; color: var(--text-light); font-size: 0.875rem;">
+                <strong>Note:</strong> Clicking approve will finalize the approval and generate the employee ID card
+            </p>
+        </form>
+        
+        <hr style="margin: 30px 0;">
+        
+        <form method="POST" action="{{ url_for('safety_reject', employee_id=employee.id) }}" enctype="multipart/form-data">
+            <h4 style="color: var(--danger-color); margin-bottom: 15px;">Reject Employee</h4>
+            <div class="form-group">
+                <label for="approved_by_reject">Safety Officer Name</label>
+                <input type="text" class="form-control" id="approved_by_reject" name="approved_by" value="Safety Officer" required>
+            </div>
+            <div class="form-group">
+                <label for="reason">Rejection Reason</label>
+                <textarea class="form-control" id="reason" name="reason" rows="3" required>PPE or safety requirements not met</textarea>
+            </div>
+            <div class="form-group">
+                <label for="signature_reject">Safety Officer Signature (Optional)</label>
+                <input type="file" class="form-control" id="signature_reject" name="signature" accept="image/*">
+            </div>
+            <button type="submit" class="btn btn-danger">✗ Reject - Safety Issues</button>
+        </form>
+    </div>
+    
+    <div class="btn-group">
+        <a href="{{ url_for('safety_dashboard') }}" class="btn btn-secondary">Back to Dashboard</a>
+    </div>
+</div>
+{% endblock %}

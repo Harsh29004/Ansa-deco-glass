@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Medical Dashboard{% endblock %}
+
+{% block content %}
+<div class="main-content">
+    <h1 style="color: var(--primary-color); margin-bottom: 30px;">Medical Department Dashboard</h1>
+    <p style="margin-bottom: 30px;">Conduct medical fitness checks for HR-approved employees</p>
+    
+    {% if employees %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Employee Name</th>
+                    <th>Contractor</th>
+                    <th>Department</th>
+                    <th>DOB</th>
+                    <th>HR Approval</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for emp in employees %}
+                <tr>
+                    <td>{{ emp.first_name }} {{ emp.middle_name }} {{ emp.surname }}</td>
+                    <td>{{ emp.contractor_info.contractor_name }}</td>
+                    <td>{{ emp.contractor_info.department }}</td>
+                    <td>{{ emp.dob }}</td>
+                    <td>
+                        <span class="badge badge-approved">Approved</span><br>
+                        <small>{{ emp.approval_flow.hr.at.strftime('%d-%m-%Y') if emp.approval_flow.hr.at else '' }}</small>
+                    </td>
+                    <td>
+                        <span class="badge badge-pending">Pending Medical Check</span>
+                    </td>
+                    <td>
+                        <a href="{{ url_for('medical_review', employee_id=emp.id) }}" class="btn btn-primary" style="padding: 8px 15px; font-size: 0.875rem;">Review</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="card">
+            <p style="text-align: center; color: var(--text-light); margin: 20px 0;">No pending employees for medical review</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

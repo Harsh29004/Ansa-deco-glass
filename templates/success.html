@@ -1,0 +1,241 @@
+{% extends "base.html" %}
+
+{% block title %}Application Submitted - ANSA Approval System{% endblock %}
+
+{% block content %}
+<div class="main-content">
+    <div class="success-container">
+        <div class="success-icon">✓</div>
+        <h1 style="color: var(--success-color); margin-bottom: 20px;">Application Submitted Successfully!</h1>
+        <p style="font-size: 1.1rem; margin-bottom: 30px;">Thank you for submitting your contractor application with {{ employee_count }} employee(s).</p>
+        
+        <div class="credentials-box">
+            <h2 style="color: var(--primary-color); margin-bottom: 20px;">
+                <span style="font-size: 2rem;">🔑</span> Your Application Credentials
+            </h2>
+            <p style="margin-bottom: 20px; color: var(--text-light);">Please save these credentials - you'll need them to check your application status</p>
+            
+            <div class="credential-item">
+                <label>Contractor ID:</label>
+                <div class="credential-value">{{ contractor_id }}</div>
+                <button onclick="copyToClipboard('{{ contractor_id }}', 'id')" class="btn-copy" id="copy-id">Copy</button>
+            </div>
+            
+            <div class="credential-item">
+                <label>Access Token:</label>
+                <div class="credential-value">{{ access_token }}</div>
+                <button onclick="copyToClipboard('{{ access_token }}', 'token')" class="btn-copy" id="copy-token">Copy</button>
+            </div>
+        </div>
+        
+        <div class="alert alert-warning" style="margin: 30px 0;">
+            <strong>⚠️ Important:</strong>
+            <ul style="margin-top: 10px; padding-left: 20px;">
+                <li>These credentials are shown <strong>only once</strong> - please save them now!</li>
+                <li>An email with these credentials has been sent to: <strong>{{ email }}</strong></li>
+                <li>You'll need both Contractor ID and Access Token to check your status</li>
+                <li>Keep your Access Token secure and confidential</li>
+            </ul>
+        </div>
+        
+        <div class="card" style="margin-top: 30px;">
+            <h3 style="color: var(--primary-color); margin-bottom: 15px;">What Happens Next?</h3>
+            <div class="timeline-simple">
+                <div class="step">
+                    <span class="step-number">1</span>
+                    <div class="step-content">
+                        <strong>HR Review</strong>
+                        <p>Document verification and initial approval</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <span class="step-number">2</span>
+                    <div class="step-content">
+                        <strong>Medical Check</strong>
+                        <p>Fitness assessment by medical officer</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <span class="step-number">3</span>
+                    <div class="step-content">
+                        <strong>Safety Verification</strong>
+                        <p>PPE and safety requirements check</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <span class="step-number">4</span>
+                    <div class="step-content">
+                        <strong>ID Card Generation</strong>
+                        <p>Automatic ID card creation upon approval</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="action-buttons">
+            <a href="{{ url_for('contractor_status', contractor_id=contractor_id, token=access_token) }}" class="btn btn-primary">
+                View Application Status
+            </a>
+            <a href="{{ url_for('index') }}" class="btn btn-secondary">
+                Back to Home
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+.success-container {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.success-icon {
+    width: 100px;
+    height: 100px;
+    background: var(--success-color);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 4rem;
+    margin: 0 auto 30px;
+    animation: scaleIn 0.5s ease-out;
+}
+
+@keyframes scaleIn {
+    from { transform: scale(0); }
+    to { transform: scale(1); }
+}
+
+.credentials-box {
+    background: linear-gradient(135deg, #e3f2fd 0%, #f8f9fa 100%);
+    border: 2px solid var(--primary-color);
+    border-radius: 8px;
+    padding: 30px;
+    margin: 30px 0;
+}
+
+.credential-item {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    margin: 15px 0;
+    text-align: left;
+    position: relative;
+}
+
+.credential-item label {
+    font-weight: bold;
+    color: var(--primary-color);
+    display: block;
+    margin-bottom: 10px;
+}
+
+.credential-value {
+    font-family: 'Courier New', monospace;
+    font-size: 1.3rem;
+    color: var(--secondary-color);
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 4px;
+    border: 1px solid var(--border-color);
+    word-break: break-all;
+}
+
+.btn-copy {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background 0.3s;
+}
+
+.btn-copy:hover {
+    background: var(--secondary-color);
+}
+
+.btn-copy.copied {
+    background: var(--success-color);
+}
+
+.timeline-simple {
+    text-align: left;
+}
+
+.step {
+    display: flex;
+    align-items: flex-start;
+    margin: 20px 0;
+    gap: 15px;
+}
+
+.step-number {
+    width: 40px;
+    height: 40px;
+    background: var(--primary-color);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    flex-shrink: 0;
+}
+
+.step-content {
+    flex-grow: 1;
+}
+
+.step-content strong {
+    color: var(--primary-color);
+    font-size: 1.1rem;
+}
+
+.step-content p {
+    margin: 5px 0 0 0;
+    color: var(--text-light);
+}
+
+.action-buttons {
+    margin-top: 30px;
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: #5a6268;
+}
+</style>
+
+<script>
+function copyToClipboard(text, type) {
+    navigator.clipboard.writeText(text).then(function() {
+        const btn = document.getElementById('copy-' + type);
+        const originalText = btn.textContent;
+        btn.textContent = '✓ Copied!';
+        btn.classList.add('copied');
+        
+        setTimeout(function() {
+            btn.textContent = originalText;
+            btn.classList.remove('copied');
+        }, 2000);
+    }).catch(function(err) {
+        alert('Failed to copy: ' + err);
+    });
+}
+</script>
+{% endblock %}

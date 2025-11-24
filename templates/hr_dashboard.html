@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}HR Dashboard{% endblock %}
+
+{% block content %}
+<div class="main-content">
+    <h1 style="color: var(--primary-color); margin-bottom: 30px;">HR Department Dashboard</h1>
+    <p style="margin-bottom: 30px;">Review and approve contractor employee applications</p>
+    
+    {% if employees %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Employee Name</th>
+                    <th>Contractor</th>
+                    <th>Department</th>
+                    <th>DOB</th>
+                    <th>Qualification</th>
+                    <th>Applied Date</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for emp in employees %}
+                <tr>
+                    <td>{{ emp.first_name }} {{ emp.middle_name }} {{ emp.surname }}</td>
+                    <td>{{ emp.contractor_info.contractor_name }}</td>
+                    <td>{{ emp.contractor_info.department }}</td>
+                    <td>{{ emp.dob }}</td>
+                    <td>{{ emp.qualification or 'N/A' }}</td>
+                    <td>{{ emp.applied_at.strftime('%d-%m-%Y %H:%M') if emp.applied_at else 'N/A' }}</td>
+                    <td>
+                        <span class="badge badge-pending">Pending HR Review</span>
+                    </td>
+                    <td>
+                        <a href="{{ url_for('hr_review', employee_id=emp.id) }}" class="btn btn-primary" style="padding: 8px 15px; font-size: 0.875rem;">Review</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="card">
+            <p style="text-align: center; color: var(--text-light); margin: 20px 0;">No pending employee applications for HR review</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
