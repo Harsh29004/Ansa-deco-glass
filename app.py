@@ -244,12 +244,18 @@ def employee_application():
     Employee Application Form
     Step 2 of the workflow - Can add multiple employees
     """
+    # Check if contractor session exists
     contractor_id = session.get('contractor_id')
     
     if not contractor_id:
         flash('Please complete contractor form first', 'error')
         return redirect(url_for('contractor_form'))
     
+    # For GET request, render the form
+    if request.method == 'GET':
+        return render_template('application_form.html')
+    
+    # POST request - handle form submission
     if request.method == 'POST':
         try:
             # Get number of employees being submitted
