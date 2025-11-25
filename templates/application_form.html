@@ -4,8 +4,10 @@
 
 {% block content %}
 <div class="main-content">
-    <h1 style="color: var(--primary-color); margin-bottom: 30px;">Employee Application Form</h1>
-    <p style="margin-bottom: 30px; color: var(--text-light);">Add details for all employees working under this contract</p>
+    <div style="text-align: center; margin-bottom: 30px;">
+        <h1 style="color: var(--primary-color); text-decoration: underline;">APPLICATION FORM</h1>
+        <h2 style="color: var(--text-color);">ભરતી ફોર્મ</h2>
+    </div>
     
     <form method="POST" enctype="multipart/form-data" id="employeeApplicationForm">
         <input type="hidden" name="employee_count" id="employee_count" value="1">
@@ -30,24 +32,147 @@
         </div>
         
         <div class="form-section">
-            <h3>Personal Information</h3>
+            <div class="form-row">
+                <div class="form-group" style="flex: 0 0 200px;">
+                    <label class="required">Sr.No. (અનુ.ક્રમ નં.)</label>
+                    <input type="text" class="form-control" name="emp_0_sr_no" required>
+                </div>
+                
+                <div class="form-group" style="flex: 1;">
+                    <label class="required">Post Applied for (જે જગ્યા માટે)</label>
+                    <input type="text" class="form-control" name="emp_0_post" required>
+                </div>
+                
+                <div class="form-group" style="flex: 0 0 200px; text-align: right;">
+                    <label class="required" style="display: block; margin-bottom: 5px;">PHOTO</label>
+                    <input type="file" class="form-control" name="emp_0_photo" accept="image/*" required 
+                           style="font-size: 12px; padding: 5px;">
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-section">
+            <h3>1. FULL NAME / પૂરૂ નામ</h3>
+            <p style="margin-bottom: 15px; font-style: italic;">(In Block Letter)</p>
             
             <div class="form-row">
                 <div class="form-group">
-                    <label class="required">First Name</label>
-                    <input type="text" class="form-control" name="emp_0_first_name" required>
+                    <label class="required">FIRST NAME (નામ)</label>
+                    <input type="text" class="form-control" name="emp_0_first_name" required style="text-transform: uppercase;">
                 </div>
                 
                 <div class="form-group">
-                    <label>Middle Name</label>
-                    <input type="text" class="form-control" name="emp_0_middle_name">
+                    <label>MIDDLE NAME (પિતાનું નામ)</label>
+                    <input type="text" class="form-control" name="emp_0_middle_name" style="text-transform: uppercase;">
                 </div>
                 
                 <div class="form-group">
-                    <label class="required">Surname</label>
-                    <input type="text" class="form-control" name="emp_0_surname" required>
+                    <label class="required">SURNAME (અટક)</label>
+                    <input type="text" class="form-control" name="emp_0_surname" required style="text-transform: uppercase;">
                 </div>
             </div>
+        </div>
+        
+        <div class="form-section">
+            <h3>2. ADDRESS (Permanent) / સરનામું (કાયમી)</h3>
+            
+            <div class="form-group">
+                <label class="required">Street (શેરી)</label>
+                <input type="text" class="form-control" name="emp_0_perm_street" required>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="required">Village (ગામ)</label>
+                    <input type="text" class="form-control" name="emp_0_perm_village" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="required">POST</label>
+                    <input type="text" class="form-control" name="emp_0_perm_post" required>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="required">Taluka (તાલુકો)</label>
+                    <input type="text" class="form-control" name="emp_0_perm_taluka" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="required">DIST (જિલ્લો)</label>
+                    <input type="text" class="form-control" name="emp_0_perm_dist" required>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="required">State (રાજ્ય)</label>
+                    <input type="text" class="form-control" name="emp_0_perm_state" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="required">Phone No:</label>
+                    <input type="tel" class="form-control" name="emp_0_perm_phone" pattern="[0-9]{10}" maxlength="10" required>
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-section">
+            <h3>3. ADDRESS (Present) / સરનામું (હાલનું)</h3>
+            <div style="margin-bottom: 15px;">
+                <label style="display: flex; align-items: center; cursor: pointer;">
+                    <input type="checkbox" onchange="copyPermanentAddress(this)" style="margin-right: 10px;">
+                    Same as Permanent Address
+                </label>
+            </div>
+                </label>
+            </div>
+            
+            <div class="form-group">
+                <label>Street (શેરી)</label>
+                <input type="text" class="form-control" name="emp_0_pres_street">
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Village (ગામ)</label>
+                    <input type="text" class="form-control" name="emp_0_pres_village">
+                </div>
+                
+                <div class="form-group">
+                    <label>POST</label>
+                    <input type="text" class="form-control" name="emp_0_pres_post">
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Taluka (તાલુકો)</label>
+                    <input type="text" class="form-control" name="emp_0_pres_taluka">
+                </div>
+                
+                <div class="form-group">
+                    <label>DIST (જિલ્લો)</label>
+                    <input type="text" class="form-control" name="emp_0_pres_dist">
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>State (રાજ્ય)</label>
+                    <input type="text" class="form-control" name="emp_0_pres_state">
+                </div>
+                
+                <div class="form-group">
+                    <label>Phone No:</label>
+                    <input type="tel" class="form-control" name="emp_0_pres_phone" pattern="[0-9]{10}" maxlength="10">
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-section">
+            <h3>4. Date of Birth / જન્મ તારીખ</h3>
             
             <div class="form-row">
                 <div class="form-group">
@@ -56,86 +181,42 @@
                 </div>
                 
                 <div class="form-group">
-                    <label>Qualification</label>
-                    <input type="text" class="form-control" name="emp_0_qualification">
+                    <label>Age (ઉંમર)</label>
+                    <input type="number" class="form-control" name="emp_0_age" readonly>
                 </div>
-                
-                <div class="form-group">
-                    <label>Aadhar Number</label>
-                    <input type="text" class="form-control" name="emp_0_aadhar" pattern="[0-9]{12}" maxlength="12">
-                </div>
-            </div>
-        </div>
-        
-        <div class="form-section">
-            <h3>Permanent Address</h3>
-            
-            <div class="form-group">
-                <label>Street Address</label>
-                <input type="text" class="form-control" name="emp_0_perm_street">
-            </div>
-            
-            <div class="form-row">
-                <div class="form-group">
-                    <label>City</label>
-                    <input type="text" class="form-control" name="emp_0_perm_city">
-                </div>
-                
-                <div class="form-group">
-                    <label>State</label>
-                    <input type="text" class="form-control" name="emp_0_perm_state">
-                </div>
-                
-                <div class="form-group">
-                    <label>Pincode</label>
-                    <input type="text" class="form-control" name="emp_0_perm_pincode" pattern="[0-9]{6}" maxlength="6">
-                </div>
-            </div>
-        </div>
-        
-        <div class="form-section">
-            <h3>Present Address</h3>
-            <div style="margin-bottom: 15px;">
-                <label style="display: flex; align-items: center; cursor: pointer;">
-                    <input type="checkbox" onchange="copyPermanentAddress(this)" style="margin-right: 10px;">
-                    Same as Permanent Address
-                </label>
             </div>
             
             <div class="form-group">
-                <label>Street Address</label>
-                <input type="text" class="form-control" name="emp_0_pres_street">
-            </div>
-            
-            <div class="form-row">
-                <div class="form-group">
-                    <label>City</label>
-                    <input type="text" class="form-control" name="emp_0_pres_city">
-                </div>
-                
-                <div class="form-group">
-                    <label>State</label>
-                    <input type="text" class="form-control" name="emp_0_pres_state">
-                </div>
-                
-                <div class="form-group">
-                    <label>Pincode</label>
-                    <input type="text" class="form-control" name="emp_0_pres_pincode" pattern="[0-9]{6}" maxlength="6">
-                </div>
+                <label>Proof Of Age (જન્મ તારીખના પુરાવા)</label>
+                <input type="text" class="form-control" name="emp_0_age_proof" placeholder="e.g., Birth Certificate, School Leaving Certificate">
             </div>
         </div>
         
         <div class="form-section">
-            <h3>Bank Details</h3>
+            <h3>5. Qualification / શૈક્ષણિક</h3>
+            <div class="form-group">
+                <input type="text" class="form-control" name="emp_0_qualification">
+            </div>
+        </div>
+        
+        <div class="form-section">
+            <h3>6. Aadhar Card No. (આધાર કાર્ડ નંબર)</h3>
+            <div class="form-group">
+                <input type="text" class="form-control" name="emp_0_aadhar" pattern="[0-9]{12}" maxlength="12" placeholder="12 digit Aadhar number">
+            </div>
+        </div>
+        
+        <div class="form-section">
+            <h3>7. Bank Detail / બેંક વિગત</h3>
             
             <div class="form-row">
                 <div class="form-group">
-                    <label>Bank Name</label>
+                    <label>(a) Bank Name (બેંકનું નામ)</label>
                     <input type="text" class="form-control" name="emp_0_bank_name">
                 </div>
                 
                 <div class="form-group">
-                    <label>Account Number</label>
+                    <label>(b) Account No. (ખાતા નંબર)</label>
                     <input type="text" class="form-control" name="emp_0_bank_account">
                 </div>
                 
@@ -147,57 +228,118 @@
         </div>
         
         <div class="form-section">
-            <h3>Emergency Contact</h3>
+            <h3>8. Contact Person in Case of Emergency / કટોકટી વખતે સંપર્ક કરવા</h3>
+            <p style="margin-bottom: 15px; font-style: italic;">(સગા સબંધી સાથે કેવા લાગે છે)</p>
             
             <div class="form-row">
                 <div class="form-group">
-                    <label>Contact Name</label>
+                    <label>a) Name</label>
                     <input type="text" class="form-control" name="emp_0_emergency_name">
                 </div>
                 
                 <div class="form-group">
-                    <label>Contact Phone</label>
-                    <input type="tel" class="form-control" name="emp_0_emergency_phone" pattern="[0-9]{10}">
-                </div>
-                
-                <div class="form-group">
-                    <label>Relation</label>
+                    <label>b) Relation:</label>
                     <input type="text" class="form-control" name="emp_0_emergency_relation">
                 </div>
+            </div>
+            
+            <div class="form-group">
+                <label>c) Address:</label>
+                <input type="text" class="form-control" name="emp_0_emergency_address">
+            </div>
+            
+            <div class="form-group">
+                <label>Phone No:</label>
+                <input type="tel" class="form-control" name="emp_0_emergency_phone" pattern="[0-9]{10}" maxlength="10">
             </div>
         </div>
         
         <div class="form-section">
-            <h3>Past Employment</h3>
+            <h3>8. Past Employer With Address & Where & Duration of Employment</h3>
+            <p style="margin-bottom: 15px; font-style: italic;">પહેલાં કઈ કંપનીમાં કામ કરતા હતા તેનો સંપૂર્ણ વિગત અને કેટલા વર્ષ (આશરે) કામ કર્યું તેની વિગત</p>
             
             <div class="form-row">
                 <div class="form-group">
-                    <label>Previous Company</label>
-                    <input type="text" class="form-control" name="emp_0_past_employer_company">
+                    <label>Company Name</label>
+                    <input type="text" class="form-control" name="emp_0_past_employer">
+                </div>
+                
+                <div class="form-group">
+                    <label>Address</label>
+                    <input type="text" class="form-control" name="emp_0_past_address">
                 </div>
                 
                 <div class="form-group">
                     <label>Duration</label>
-                    <input type="text" class="form-control" name="emp_0_past_employer_duration" placeholder="e.g., 2 years">
-                </div>
-                
-                <div class="form-group">
-                    <label>Position</label>
-                    <input type="text" class="form-control" name="emp_0_past_employer_position">
+                    <input type="text" class="form-control" name="emp_0_past_duration" placeholder="e.g., 2 years">
                 </div>
             </div>
         </div>
         
         <div class="form-section">
-            <h3>Reference</h3>
+            <h3>9. Reference by / સંબંધિત આપનારાનું નામ</h3>
             
             <div class="form-row">
                 <div class="form-group">
-                    <label>Reference Name</label>
+                    <label>Name</label>
                     <input type="text" class="form-control" name="emp_0_reference_name">
                 </div>
                 
                 <div class="form-group">
+                    <label>Contact</label>
+                    <input type="text" class="form-control" name="emp_0_reference_contact">
+                </div>
+                
+                <div class="form-group">
+                    <label>Relation</label>
+                    <input type="text" class="form-control" name="emp_0_reference_relation">
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-section">
+            <h3>10. Remarks / નોંધ</h3>
+            <div class="form-group">
+                <textarea class="form-control" name="emp_0_remarks" rows="3"></textarea>
+            </div>
+        </div>
+        
+        <div class="form-section">
+            <h3>Photo and Signature Upload / ફોટો અને સહી</h3>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="required">Employee Photo</label>
+                    <input type="file" class="form-control" name="emp_0_photo" accept="image/*" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="required">Employee Signature</label>
+                    <input type="file" class="form-control" name="emp_0_signature" accept="image/*" required>
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-section" style="border-top: 2px solid var(--primary-color); padding-top: 20px; margin-top: 30px;">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Checked by (અરજદાર ની સહી)</label>
+                    <input type="text" class="form-control" name="emp_0_checked_by" readonly>
+                </div>
+                
+                <div class="form-group">
+                    <label>Date Applied (તારીખ)</label>
+                    <input type="text" class="form-control" name="emp_0_date_applied" readonly value="">
+                </div>
+                
+                <div class="form-group">
+                    <label>Signature of the applicant (અરજદાર ની સહી)</label>
+                    <p style="margin-top: 10px; font-style: italic; color: var(--text-light);">Signature will be uploaded above</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>                <div class="form-group">
                     <label>Reference Phone</label>
                     <input type="tel" class="form-control" name="emp_0_reference_phone" pattern="[0-9]{10}">
                 </div>
@@ -220,16 +362,6 @@
                 </div>
                 
                 <div class="form-group">
-                    <label class="required">Employee Signature</label>
-                    <input type="file" class="form-control" name="emp_0_signature" accept="image/*" required>
-                    <small style="color: var(--text-light);">Signature image (Max 16MB)</small>
-                </div>
-            </div>
-            
-            <div class="form-group">
-                <label>Remarks</label>
-                <textarea class="form-control" name="emp_0_remarks" rows="3"></textarea>
-            </div>
         </div>
     </div>
 </template>
