@@ -307,45 +307,21 @@
         <div class="form-section" style="border-top: 2px solid var(--primary-color); padding-top: 20px; margin-top: 30px;">
             <div class="form-row">
                 <div class="form-group">
-                    <label>Checked by (અરજદાર ની સહી)</label>
+                    <label>Checked by (તપાસનાર ની સહી)</label>
                     <input type="text" class="form-control" name="emp_0_checked_by" readonly>
                 </div>
                 
                 <div class="form-group">
                     <label>Date Applied (તારીખ)</label>
-                    <input type="text" class="form-control" name="emp_0_date_applied" readonly value="">
+                    <input type="text" class="form-control" name="emp_0_date_applied" readonly>
                 </div>
                 
                 <div class="form-group">
-                    <label>Signature of the applicant (અરજદાર ની સહી)</label>
-                    <p style="margin-top: 10px; font-style: italic; color: var(--text-light);">Signature will be uploaded above</p>
+                    <label class="required">Signature of the applicant (અરજદાર ની સહી)</label>
+                    <input type="file" class="form-control" name="emp_0_signature" accept="image/*" required>
+                    <small style="color: var(--text-light);">Upload signature image</small>
                 </div>
             </div>
-        </div>
-    </div>
-</template>                <div class="form-group">
-                    <label>Reference Phone</label>
-                    <input type="tel" class="form-control" name="emp_0_reference_phone" pattern="[0-9]{10}">
-                </div>
-                
-                <div class="form-group">
-                    <label>Relation</label>
-                    <input type="text" class="form-control" name="emp_0_reference_relation">
-                </div>
-            </div>
-        </div>
-        
-        <div class="form-section">
-            <h3>Documents & Photos</h3>
-            
-            <div class="form-row">
-                <div class="form-group">
-                    <label class="required">Employee Photo</label>
-                    <input type="file" class="form-control" name="emp_0_photo" accept="image/*" required>
-                    <small style="color: var(--text-light);">Passport size photo (Max 16MB)</small>
-                </div>
-                
-                <div class="form-group">
         </div>
     </div>
 </template>
@@ -382,6 +358,30 @@ function addEmployee() {
     if (employeeCount > 0) {
         const removeBtn = clone.querySelector('.remove-employee');
         removeBtn.style.display = 'block';
+    }
+    
+    // Set current date and time for Date Applied field
+    const dateAppliedInput = clone.querySelector(`input[name="emp_${employeeCount}_date_applied"]`);
+    if (dateAppliedInput) {
+        const now = new Date();
+        const dateStr = now.toLocaleDateString('en-GB') + ' ' + now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+        dateAppliedInput.value = dateStr;
+    }
+    
+    // Add event listener for DOB to calculate age
+    const dobInput = clone.querySelector(`input[name="emp_${employeeCount}_dob"]`);
+    const ageInput = clone.querySelector(`input[name="emp_${employeeCount}_age"]`);
+    if (dobInput && ageInput) {
+        dobInput.addEventListener('change', function() {
+            const dob = new Date(this.value);
+            const today = new Date();
+            let age = today.getFullYear() - dob.getFullYear();
+            const monthDiff = today.getMonth() - dob.getMonth();
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
+                age--;
+            }
+            ageInput.value = age >= 0 ? age : '';
+        });
     }
     
     container.appendChild(clone);
