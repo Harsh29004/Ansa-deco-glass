@@ -309,11 +309,10 @@ def employee_application():
                 
                 employee_name = f"{emp_data['first_name']} {emp_data['surname']}"
                 
-                # Handle photo upload
+                # Handle photo upload (optimization handled in save function)
                 photo_file = request.files.get(f'{prefix}photo')
                 if photo_file and allowed_file(photo_file.filename):
                     photo_path = save_employee_photo(photo_file, employee_name)
-                    optimize_image(photo_path)
                     emp_data['photo_path'] = photo_path
                 
                 # Handle signature upload
