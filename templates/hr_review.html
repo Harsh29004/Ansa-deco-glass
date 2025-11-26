@@ -19,12 +19,18 @@
             <strong>Job Description:</strong><br>
             {{ contractor.job_description }}
         </div>
-        <div style="margin-top: 15px;">
+        <div style="margin-top: 20px;">
             <strong>Contractor Signature:</strong><br>
             {% if contractor.signature_path %}
-                <img src="{{ url_for('serve_uploaded_file', filename=contractor.signature_path.replace('\\', '/')) }}" class="signature-preview" alt="Contractor Signature" style="max-width: 200px; border: 1px solid #ddd; padding: 5px;">
+                {% if contractor.signature_path.startswith('http') %}
+                    <img src="{{ contractor.signature_path }}" class="signature-preview" alt="Contractor Signature" style="max-width: 250px; max-height: 100px; border: 2px solid #ddd; padding: 8px; margin-top: 10px; border-radius: 4px; background: white;">
+                {% else %}
+                    <img src="{{ url_for('serve_uploaded_file', filename=contractor.signature_path.replace('\\', '/')) }}" class="signature-preview" alt="Contractor Signature" style="max-width: 250px; max-height: 100px; border: 2px solid #ddd; padding: 8px; margin-top: 10px; border-radius: 4px; background: white;">
+                {% endif %}
             {% else %}
-                <span style="color: var(--text-light);">Not available</span>
+                <div style="width: 250px; height: 80px; border: 2px dashed #ccc; display: flex; align-items: center; justify-content: center; margin-top: 10px; color: var(--text-light); background: #f9f9f9;">
+                    No Signature
+                </div>
             {% endif %}
         </div>
     </div>
@@ -161,20 +167,32 @@
             <h3 class="card-title">Documents</h3>
         </div>
         <div class="form-row">
-            <div>
+            <div style="text-align: center;">
                 <strong>Employee Photo:</strong><br>
                 {% if employee.photo_path %}
-                    <img src="{{ url_for('serve_uploaded_file', filename=employee.photo_path.replace('\\', '/')) }}" class="image-preview" alt="Employee Photo" style="max-width: 200px; max-height: 250px; border: 1px solid #ddd; padding: 5px;">
+                    {% if employee.photo_path.startswith('http') %}
+                        <img src="{{ employee.photo_path }}" class="image-preview" alt="Employee Photo" style="max-width: 250px; max-height: 300px; border: 2px solid #ddd; padding: 5px; margin-top: 10px; border-radius: 4px;">
+                    {% else %}
+                        <img src="{{ url_for('serve_uploaded_file', filename=employee.photo_path.replace('\\', '/')) }}" class="image-preview" alt="Employee Photo" style="max-width: 250px; max-height: 300px; border: 2px solid #ddd; padding: 5px; margin-top: 10px; border-radius: 4px;">
+                    {% endif %}
                 {% else %}
-                    <span style="color: var(--text-light);">Not available</span>
+                    <div style="width: 250px; height: 200px; border: 2px dashed #ccc; display: flex; align-items: center; justify-content: center; margin-top: 10px; color: var(--text-light);">
+                        No Photo
+                    </div>
                 {% endif %}
             </div>
-            <div>
+            <div style="text-align: center;">
                 <strong>Employee Signature:</strong><br>
                 {% if employee.signature_path %}
-                    <img src="{{ url_for('serve_uploaded_file', filename=employee.signature_path.replace('\\', '/')) }}" class="signature-preview" alt="Employee Signature" style="max-width: 200px; border: 1px solid #ddd; padding: 5px;">
+                    {% if employee.signature_path.startswith('http') %}
+                        <img src="{{ employee.signature_path }}" class="signature-preview" alt="Employee Signature" style="max-width: 250px; max-height: 100px; border: 2px solid #ddd; padding: 5px; margin-top: 10px; border-radius: 4px;">
+                    {% else %}
+                        <img src="{{ url_for('serve_uploaded_file', filename=employee.signature_path.replace('\\', '/')) }}" class="signature-preview" alt="Employee Signature" style="max-width: 250px; max-height: 100px; border: 2px solid #ddd; padding: 5px; margin-top: 10px; border-radius: 4px;">
+                    {% endif %}
                 {% else %}
-                    <span style="color: var(--text-light);">Not available</span>
+                    <div style="width: 250px; height: 80px; border: 2px dashed #ccc; display: flex; align-items: center; justify-content: center; margin-top: 10px; color: var(--text-light);">
+                        No Signature
+                    </div>
                 {% endif %}
             </div>
         </div>
