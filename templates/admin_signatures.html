@@ -17,9 +17,8 @@
                 <h4 style="color: var(--primary-color); margin-bottom: 10px;">HR Department</h4>
                 {% if signatures.hr %}
                     <div><strong>Name:</strong> {{ signatures.hr.name }}</div>
-                    <div><strong>Updated:</strong> {{ signatures.hr.created_at.strftime('%d-%m-%Y %H:%M') }}</div>
                     <div style="margin-top: 10px;">
-                        <img src="/{{ signatures.hr.path }}" class="signature-preview" alt="HR Signature">
+                        <img src="{{ signatures.hr.path if signatures.hr.path.startswith('http') else '/' + signatures.hr.path }}" class="signature-preview" alt="HR Signature">
                     </div>
                     <div style="color: var(--success-color); margin-top: 10px;">✓ Configured</div>
                 {% else %}
@@ -31,9 +30,8 @@
                 <h4 style="color: var(--primary-color); margin-bottom: 10px;">System / Manager</h4>
                 {% if signatures.system %}
                     <div><strong>Name:</strong> {{ signatures.system.name }}</div>
-                    <div><strong>Updated:</strong> {{ signatures.system.created_at.strftime('%d-%m-%Y %H:%M') }}</div>
                     <div style="margin-top: 10px;">
-                        <img src="/{{ signatures.system.path }}" class="signature-preview" alt="System Signature">
+                        <img src="{{ signatures.system.path if signatures.system.path.startswith('http') else '/' + signatures.system.path }}" class="signature-preview" alt="System Signature">
                     </div>
                     <div style="color: var(--success-color); margin-top: 10px;">✓ Configured</div>
                 {% else %}
