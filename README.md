@@ -97,9 +97,9 @@ CREATE TABLE employees (
 CREATE TABLE signatures (
     id BIGSERIAL PRIMARY KEY,
     role VARCHAR(50) UNIQUE NOT NULL,
-    name VARCHAR(255),
-    path VARCHAR(500),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    file_path VARCHAR(500),
+    uploaded_by VARCHAR(255),
+    uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- 4. ID Cards Table

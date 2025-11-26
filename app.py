@@ -124,6 +124,12 @@ def admin_login():
         username = request.form.get('username')
         password = request.form.get('password')
         
+        # Debug logging (remove in production or use proper logging)
+        print(f"Admin login attempt - Username: {username}")
+        print(f"Expected username: {Config.ADMIN_USERNAME}")
+        print(f"Username match: {username == Config.ADMIN_USERNAME}")
+        print(f"Password match: {password == Config.ADMIN_PASSWORD}")
+        
         if username == Config.ADMIN_USERNAME and password == Config.ADMIN_PASSWORD:
             session['admin_logged_in'] = True
             session['user_role'] = 'Admin'
@@ -750,8 +756,16 @@ def admin_signatures():
         
         hod_signatures = hod_signature_model.get_all()
         
+        # Debug: Print what we got
+        print(f"DEBUG - HR signature: {signatures['hr']}")
+        print(f"DEBUG - SYSTEM signature: {signatures['system']}")
+        print(f"DEBUG - HOD signatures count: {len(hod_signatures) if hod_signatures else 0}")
+        
         return render_template('admin_signatures.html', signatures=signatures, hod_signatures=hod_signatures)
     except Exception as e:
+        import traceback
+        print(f"ERROR in admin_signatures: {str(e)}")
+        print(traceback.format_exc())
         flash(f'Error loading signatures: {str(e)}', 'error')
         return redirect(url_for('index'))
 

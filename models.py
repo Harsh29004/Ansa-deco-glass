@@ -205,22 +205,22 @@ class SignatureModel:
         self.table = 'signatures'
     
     def save(self, role, file_path, uploaded_by):
-        """Save or update signature for a role - database auto-handles created_at"""
+        """Save or update signature for a role - uses actual database columns"""
         # Check if signature exists
         existing = self.get_by_role(role)
         
         if existing:
-            # Update existing - only update path and name
+            # Update existing - use actual column names: file_path and uploaded_by
             self.client.table(self.table).update({
-                'path': file_path,
-                'name': uploaded_by
+                'file_path': file_path,
+                'uploaded_by': uploaded_by
             }).eq('role', role).execute()
         else:
-            # Insert new - database auto-sets created_at with DEFAULT CURRENT_TIMESTAMP
+            # Insert new - use actual column names, uploaded_at auto-set by DEFAULT
             self.client.table(self.table).insert({
                 'role': role,
-                'path': file_path,
-                'name': uploaded_by
+                'file_path': file_path,
+                'uploaded_by': uploaded_by
             }).execute()
     
     def get_by_role(self, role):

@@ -16,9 +16,9 @@
             <div style="padding: 20px; background: var(--light-bg); border-radius: 4px;">
                 <h4 style="color: var(--primary-color); margin-bottom: 10px;">HR Department</h4>
                 {% if signatures.hr %}
-                    <div><strong>Name:</strong> {{ signatures.hr['name'] }}</div>
+                    <div><strong>Name:</strong> {{ signatures.hr['uploaded_by'] }}</div>
                     <div style="margin-top: 10px;">
-                        <img src="{{ signatures.hr['path'] if signatures.hr['path'].startswith('http') else '/' + signatures.hr['path'] }}" class="signature-preview" alt="HR Signature">
+                        <img src="{{ signatures.hr['file_path'] if signatures.hr['file_path'].startswith('http') else '/' + signatures.hr['file_path'] }}" class="signature-preview" alt="HR Signature">
                     </div>
                     <div style="color: var(--success-color); margin-top: 10px;">✓ Configured</div>
                 {% else %}
@@ -29,9 +29,9 @@
             <div style="padding: 20px; background: var(--light-bg); border-radius: 4px;">
                 <h4 style="color: var(--primary-color); margin-bottom: 10px;">System / Manager</h4>
                 {% if signatures.system %}
-                    <div><strong>Name:</strong> {{ signatures.system['name'] }}</div>
+                    <div><strong>Name:</strong> {{ signatures.system['uploaded_by'] }}</div>
                     <div style="margin-top: 10px;">
-                        <img src="{{ signatures.system['path'] if signatures.system['path'].startswith('http') else '/' + signatures.system['path'] }}" class="signature-preview" alt="System Signature">
+                        <img src="{{ signatures.system['file_path'] if signatures.system['file_path'].startswith('http') else '/' + signatures.system['file_path'] }}" class="signature-preview" alt="System Signature">
                     </div>
                     <div style="color: var(--success-color); margin-top: 10px;">✓ Configured</div>
                 {% else %}
@@ -115,7 +115,7 @@
                     <td><strong>{{ hod['department'] }}</strong></td>
                     <td>{{ hod['hod_name'] }}</td>
                     <td>
-                        <img src="{{ url_for('serve_uploaded_file', filename=hod['signature_path'].replace('\\', '/')) }}" 
+                        <img src="{{ hod['signature_path'] if hod['signature_path'].startswith('http') else url_for('serve_uploaded_file', filename=hod['signature_path'].replace('\\', '/')) }}" 
                              alt="HOD Signature" style="max-width: 150px; max-height: 60px; border: 1px solid #ddd; padding: 3px;">
                     </td>
                     <td>
