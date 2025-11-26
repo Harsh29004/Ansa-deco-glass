@@ -31,43 +31,129 @@
     
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Employee Personal Information</h3>
+            <h3 class="card-title">1. FULL NAME / પૂરૂ નામ</h3>
         </div>
         <div class="form-row">
-            <div><strong>Full Name:</strong> {{ employee.first_name }} {{ employee.middle_name }} {{ employee.surname }}</div>
-            <div><strong>Date of Birth:</strong> {{ employee.dob }}</div>
-            <div><strong>Qualification:</strong> {{ employee.qualification or 'N/A' }}</div>
-        </div>
-        <div class="form-row" style="margin-top: 15px;">
-            <div><strong>Aadhar:</strong> {{ employee.aadhar or 'N/A' }}</div>
-            <div><strong>Father Name:</strong> {{ employee.father_name or 'N/A' }}</div>
-            <div><strong>Submitted:</strong> {{ employee.submitted_at[:10] if employee.submitted_at else 'N/A' }}</div>
+            <div><strong>FIRST NAME (નામ):</strong> {{ employee.first_name }}</div>
+            <div><strong>MIDDLE NAME (પિતાનું નામ):</strong> {{ employee.middle_name or 'N/A' }}</div>
+            <div><strong>SURNAME (અટક):</strong> {{ employee.surname }}</div>
         </div>
     </div>
     
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Address Details</h3>
+            <h3 class="card-title">2. ADDRESS (Permanent) / સરનામું (કાયમી)</h3>
         </div>
-        <div style="margin-bottom: 20px;">
-            <strong>Permanent Address:</strong><br>
-            {{ employee.address_permanent or 'N/A' }}
-        </div>
-        <div>
-            <strong>Present Address:</strong><br>
-            {{ employee.address_present or 'N/A' }}
-        </div>
+        {{ employee.address_permanent or 'N/A' }}
     </div>
     
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Contact Information</h3>
+            <h3 class="card-title">3. ADDRESS (Present) / સરનામું (હાલનું)</h3>
+        </div>
+        {{ employee.address_present or 'Same as Permanent Address' }}
+    </div>
+    
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">4. Date of Birth / જન્મ તારીખ</h3>
         </div>
         <div class="form-row">
-            <div><strong>Mobile:</strong> {{ employee.mobile or 'N/A' }}</div>
-            <div><strong>Emergency Contact:</strong> {{ employee.emergency_contact or 'N/A' }}</div>
-            <div><strong>Emergency Mobile:</strong> {{ employee.emergency_mobile or 'N/A' }}</div>
+            <div><strong>Date of Birth:</strong> {{ employee.dob or 'N/A' }}</div>
+            <div><strong>Age (ઉંમર):</strong> {{ employee.age or 'N/A' }}</div>
         </div>
+        {% if employee.age_proof %}
+        <div style="margin-top: 10px;"><strong>Proof Of Age:</strong> {{ employee.age_proof }}</div>
+        {% endif %}
+    </div>
+    
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">5. Qualification / શૈક્ષણિક</h3>
+        </div>
+        {{ employee.qualification or 'N/A' }}
+    </div>
+    
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">6. Aadhar Card No. (આધાર કાર્ડ નંબર)</h3>
+        </div>
+        {{ employee.aadhar or 'N/A' }}
+    </div>
+    
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">7. Bank Detail / બેંક વિગત</h3>
+        </div>
+        {% if employee.bank_name or employee.bank_account or employee.bank_ifsc %}
+        <div class="form-row">
+            <div><strong>(a) Bank Name:</strong> {{ employee.bank_name or 'N/A' }}</div>
+            <div><strong>(b) Account No.:</strong> {{ employee.bank_account or 'N/A' }}</div>
+            <div><strong>IFSC Code:</strong> {{ employee.bank_ifsc or 'N/A' }}</div>
+        </div>
+        {% else %}
+        <div>N/A</div>
+        {% endif %}
+    </div>
+    
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">8. Contact Person in Case of Emergency / કટોકટી વખતે સંપર્ક કરવા</h3>
+        </div>
+        {% if employee.emergency_name or employee.emergency_mobile or employee.emergency_contact %}
+        <div class="form-row">
+            <div><strong>a) Name:</strong> {{ employee.emergency_name or employee.emergency_contact or 'N/A' }}</div>
+            <div><strong>b) Relation:</strong> {{ employee.emergency_relation or 'N/A' }}</div>
+        </div>
+        <div style="margin-top: 10px;">
+            <strong>c) Address:</strong> {{ employee.emergency_address or 'N/A' }}
+        </div>
+        <div style="margin-top: 10px;">
+            <strong>Phone No:</strong> {{ employee.emergency_phone or employee.emergency_mobile or 'N/A' }}
+        </div>
+        {% else %}
+        <div><strong>Name:</strong> {{ employee.emergency_contact or 'N/A' }}</div>
+        <div style="margin-top: 10px;"><strong>Mobile:</strong> {{ employee.emergency_mobile or 'N/A' }}</div>
+        {% endif %}
+    </div>
+    
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">9. Past Employer With Address & Duration</h3>
+        </div>
+        {% if employee.past_employer %}
+        <div class="form-row">
+            <div><strong>Company Name:</strong> {{ employee.past_employer }}</div>
+            <div><strong>Duration:</strong> {{ employee.past_duration or 'N/A' }}</div>
+        </div>
+        <div style="margin-top: 10px;">
+            <strong>Address:</strong> {{ employee.past_address or 'N/A' }}
+        </div>
+        {% else %}
+        <div>N/A</div>
+        {% endif %}
+    </div>
+    
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">10. Reference by / સંબંધિત આપનારાનું નામ</h3>
+        </div>
+        {% if employee.reference_name %}
+        <div class="form-row">
+            <div><strong>Name:</strong> {{ employee.reference_name }}</div>
+            <div><strong>Contact:</strong> {{ employee.reference_contact or 'N/A' }}</div>
+            <div><strong>Relation:</strong> {{ employee.reference_relation or 'N/A' }}</div>
+        </div>
+        {% else %}
+        <div>N/A</div>
+        {% endif %}
+    </div>
+    
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">11. Remarks / નોંધ</h3>
+        </div>
+        {{ employee.remarks or 'N/A' }}
     </div>
     
     <div class="card">
@@ -92,12 +178,9 @@
                 {% endif %}
             </div>
         </div>
-        {% if employee.remarks %}
         <div style="margin-top: 15px;">
-            <strong>Remarks:</strong><br>
-            {{ employee.remarks }}
+            <strong>Submitted At:</strong> {{ employee.submitted_at[:19] if employee.submitted_at else 'N/A' }}
         </div>
-        {% endif %}
     </div>
     
     <div class="card">
