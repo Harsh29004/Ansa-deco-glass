@@ -770,7 +770,7 @@ def upload_signature():
         
         # Update in database
         signature_model = SignatureModel()
-        signature_model.update_signature(role, name, signature_path)
+        signature_model.save(role, signature_path, name)
         
         flash(f'{role} signature uploaded successfully', 'success')
         return redirect(url_for('admin_signatures'))
