@@ -118,7 +118,17 @@
                         <img src="{{ url_for('serve_uploaded_file', filename=hod.signature_path.replace('\\', '/')) }}" 
                              alt="HOD Signature" style="max-width: 150px; max-height: 60px; border: 1px solid #ddd; padding: 3px;">
                     </td>
-                    <td>{{ hod.updated_at[:10] if hod.updated_at else 'N/A' }}</td>
+                    <td>
+                        {% if hod.updated_at %}
+                            {% if hod.updated_at is string %}
+                                {{ hod.updated_at[:10] }}
+                            {% else %}
+                                {{ hod.updated_at.strftime('%Y-%m-%d') if hod.updated_at.strftime else hod.updated_at }}
+                            {% endif %}
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>

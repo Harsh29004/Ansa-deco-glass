@@ -205,18 +205,18 @@ class SignatureModel:
         self.table = 'signatures'
     
     def save(self, role, file_path, uploaded_by):
-        """Save or update signature for a role"""
+        """Save or update signature for a role - database auto-handles created_at"""
         # Check if signature exists
         existing = self.get_by_role(role)
         
         if existing:
-            # Update existing - using correct column names from schema
+            # Update existing - only update path and name
             self.client.table(self.table).update({
                 'path': file_path,
                 'name': uploaded_by
             }).eq('role', role).execute()
         else:
-            # Insert new - using correct column names from schema
+            # Insert new - database auto-sets created_at with DEFAULT CURRENT_TIMESTAMP
             self.client.table(self.table).insert({
                 'role': role,
                 'path': file_path,
@@ -279,22 +279,19 @@ class HODSignatureModel:
         existing = self.get_by_department(department)
         
         if existing:
-            # Update existing
+            # Update existing - database auto-updates updated_at with DEFAULT NOW()
             update_data = {
                 'hod_name': hod_name,
-                'signature_path': signature_path,
-                'updated_at': datetime.utcnow().isoformat()
+                'signature_path': signature_path
             }
             result = self.client.table(self.table).update(update_data).eq('department', department).execute()
             return result.data[0]['id'] if result.data else None
         else:
-            # Insert new
+            # Insert new - database auto-sets created_at and updated_at with DEFAULT NOW()
             signature_data = {
                 'department': department,
                 'hod_name': hod_name,
-                'signature_path': signature_path,
-                'created_at': datetime.utcnow().isoformat(),
-                'updated_at': datetime.utcnow().isoformat()
+                'signature_path': signature_path
             }
             result = self.client.table(self.table).insert(signature_data).execute()
             return result.data[0]['id'] if result.data else None
