@@ -428,16 +428,31 @@ function copyPermanentAddress(checkbox) {
     const index = employeeForm.getAttribute('data-employee-index');
     
     if (checkbox.checked) {
-        // Copy permanent address to present address
+        // Copy permanent address to present address - all fields
         const permStreet = employeeForm.querySelector(`input[name="emp_${index}_perm_street"]`).value;
-        const permCity = employeeForm.querySelector(`input[name="emp_${index}_perm_city"]`).value;
+        const permVillage = employeeForm.querySelector(`input[name="emp_${index}_perm_village"]`).value;
+        const permPost = employeeForm.querySelector(`input[name="emp_${index}_perm_post"]`).value;
+        const permTaluka = employeeForm.querySelector(`input[name="emp_${index}_perm_taluka"]`).value;
+        const permDist = employeeForm.querySelector(`input[name="emp_${index}_perm_dist"]`).value;
         const permState = employeeForm.querySelector(`input[name="emp_${index}_perm_state"]`).value;
-        const permPincode = employeeForm.querySelector(`input[name="emp_${index}_perm_pincode"]`).value;
+        const permPhone = employeeForm.querySelector(`input[name="emp_${index}_perm_phone"]`).value;
         
         employeeForm.querySelector(`input[name="emp_${index}_pres_street"]`).value = permStreet;
-        employeeForm.querySelector(`input[name="emp_${index}_pres_city"]`).value = permCity;
+        employeeForm.querySelector(`input[name="emp_${index}_pres_village"]`).value = permVillage;
+        employeeForm.querySelector(`input[name="emp_${index}_pres_post"]`).value = permPost;
+        employeeForm.querySelector(`input[name="emp_${index}_pres_taluka"]`).value = permTaluka;
+        employeeForm.querySelector(`input[name="emp_${index}_pres_dist"]`).value = permDist;
         employeeForm.querySelector(`input[name="emp_${index}_pres_state"]`).value = permState;
-        employeeForm.querySelector(`input[name="emp_${index}_pres_pincode"]`).value = permPincode;
+        employeeForm.querySelector(`input[name="emp_${index}_pres_phone"]`).value = permPhone;
+    } else {
+        // Clear present address fields when unchecked
+        employeeForm.querySelector(`input[name="emp_${index}_pres_street"]`).value = '';
+        employeeForm.querySelector(`input[name="emp_${index}_pres_village"]`).value = '';
+        employeeForm.querySelector(`input[name="emp_${index}_pres_post"]`).value = '';
+        employeeForm.querySelector(`input[name="emp_${index}_pres_taluka"]`).value = '';
+        employeeForm.querySelector(`input[name="emp_${index}_pres_dist"]`).value = '';
+        employeeForm.querySelector(`input[name="emp_${index}_pres_state"]`).value = '';
+        employeeForm.querySelector(`input[name="emp_${index}_pres_phone"]`).value = '';
     }
 }
 
