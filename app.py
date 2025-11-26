@@ -739,17 +739,21 @@ def safety_reject(employee_id):
 @login_required('admin')
 def admin_signatures():
     """Admin page to manage department signatures"""
-    signature_model = SignatureModel()
-    hod_signature_model = HODSignatureModel()
-    
-    signatures = {
-        'hr': signature_model.get_by_role('HR'),
-        'system': signature_model.get_by_role('SYSTEM')
-    }
-    
-    hod_signatures = hod_signature_model.get_all()
-    
-    return render_template('admin_signatures.html', signatures=signatures, hod_signatures=hod_signatures)
+    try:
+        signature_model = SignatureModel()
+        hod_signature_model = HODSignatureModel()
+        
+        signatures = {
+            'hr': signature_model.get_by_role('HR'),
+            'system': signature_model.get_by_role('SYSTEM')
+        }
+        
+        hod_signatures = hod_signature_model.get_all()
+        
+        return render_template('admin_signatures.html', signatures=signatures, hod_signatures=hod_signatures)
+    except Exception as e:
+        flash(f'Error loading signatures: {str(e)}', 'error')
+        return redirect(url_for('index'))
 
 
 @app.route('/admin/upload-signature', methods=['POST'])

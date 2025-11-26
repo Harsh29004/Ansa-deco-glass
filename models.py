@@ -210,19 +210,17 @@ class SignatureModel:
         existing = self.get_by_role(role)
         
         if existing:
-            # Update existing
+            # Update existing - using correct column names from schema
             self.client.table(self.table).update({
-                'file_path': file_path,
-                'uploaded_by': uploaded_by,
-                'uploaded_at': datetime.utcnow().isoformat()
+                'path': file_path,
+                'name': uploaded_by
             }).eq('role', role).execute()
         else:
-            # Insert new
+            # Insert new - using correct column names from schema
             self.client.table(self.table).insert({
                 'role': role,
-                'file_path': file_path,
-                'uploaded_by': uploaded_by,
-                'uploaded_at': datetime.utcnow().isoformat()
+                'path': file_path,
+                'name': uploaded_by
             }).execute()
     
     def get_by_role(self, role):
